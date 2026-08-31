@@ -1,0 +1,14 @@
+{
+  "name": "oceancharter-ai",
+  "version": "1.0.0",
+  "description": "OceanCharter AI - SIH 2026 Problem Statement ID SIH26006 (Ministry of Steel / SAIL)",
+  "scripts": {
+    "install:all": "cd backend && npm install && cd ../frontend && npm install",
+    "seed": "cd backend && npm run seed",
+    "backend": "cd backend && npm start",
+    "frontend": "cd frontend && npm run dev"
+  },
+  "keywords": ["sih2026", "sail", "maritime", "freight-forecast", "vessel-matcher", "mern"],
+  "author": "SAIL Logistics Directorate / OceanCharter AI Team",
+  "license": "MIT"
+}
