@@ -16,30 +16,33 @@ import {
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
+    const isForecast = data.isForecast || false;
+    const spotVal = data.historicalRate ?? data.ratePerMT;
+
     return (
-      <div className="bg-slate-900/95 border border-ocean-500/30 p-3 rounded-xl shadow-2xl backdrop-blur-md text-xs font-mono">
+      <div className="bg-slate-900/95 border border-cyan-500/30 p-3 rounded-xl shadow-2xl backdrop-blur-md text-xs font-mono">
         <div className="text-slate-400 font-bold mb-2 pb-1 border-b border-slate-700 flex justify-between gap-4">
           <span>{label}</span>
-          <span className={data.isForecast ? 'text-amber-400' : 'text-ocean-400'}>
-            {data.isForecast ? 'PROJECTION' : 'HISTORICAL'}
+          <span className={isForecast ? 'text-amber-400' : 'text-cyan-400'}>
+            {isForecast ? 'PROJECTION' : 'HISTORICAL'}
           </span>
         </div>
-        {data.historicalRate && (
+        {spotVal !== undefined && spotVal !== null && (
           <div className="text-cyan-400 flex justify-between gap-4 py-0.5">
             <span>Spot Rate:</span>
-            <span className="font-semibold">${Number(data.historicalRate).toFixed(2)}/MT</span>
+            <span className="font-semibold">${Number(spotVal).toFixed(2)}/MT</span>
           </div>
         )}
-        {data.predictedRate && (
+        {data.predictedRate !== undefined && (
           <div className="text-amber-400 flex justify-between gap-4 py-0.5">
             <span>Forecast Rate:</span>
             <span className="font-semibold">${Number(data.predictedRate).toFixed(2)}/MT</span>
           </div>
         )}
-        {data.upperBand && data.lowerBand && data.isForecast && (
+        {data.upperBand && data.lowerBand && isForecast && (
           <div className="text-slate-400 flex justify-between gap-4 py-0.5 text-[11px]">
             <span>95% Confidence:</span>
-            <span>${data.lowerBand.toFixed(2)} – ${data.upperBand.toFixed(2)}</span>
+            <span>${Number(data.lowerBand).toFixed(2)} – ${Number(data.upperBand).toFixed(2)}</span>
           </div>
         )}
         {data.ema20 && (
@@ -69,10 +72,17 @@ export const FreightForecastChart = ({ data = [], currentRate = 18.42, height = 
     );
   }
 
+  // Normalize backend API payload to chart expected structure
+  const formattedData = data.map((item) => ({
+    ...item,
+    historicalRate: item.historicalRate ?? (!item.isForecast ? item.ratePerMT : undefined),
+    predictedRate: item.predictedRate ?? (item.isForecast ? item.ratePerMT : undefined)
+  }));
+
   return (
     <div className="w-full relative" style={{ height }}>
       <ResponsiveContainer width="100%" height="100%">
-        <ComposedChart data={data} margin={{ top: 15, right: 20, bottom: 20, left: 0 }}>
+        <ComposedChart data={formattedData} margin={{ top: 15, right: 20, bottom: 20, left: 0 }}>
           <defs>
             <linearGradient id="forecastBandGrad" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.25} />
@@ -175,9 +185,8 @@ export const FreightForecastChart = ({ data = [], currentRate = 18.42, height = 
         </ComposedChart>
       </ResponsiveContainer>
 
-      {/* Illustrative Simulation Tag */}
       <div className="absolute top-2 right-4 text-[10px] uppercase font-mono tracking-widest text-slate-500 bg-slate-900/80 px-2 py-0.5 rounded border border-slate-800 pointer-events-none">
-        ILLUSTRATIVE SIMULATION
+        LIVE MARKET FEED
       </div>
     </div>
   );

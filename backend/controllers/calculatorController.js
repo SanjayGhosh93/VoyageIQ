@@ -1,7 +1,8 @@
-// backend/controllers/calculatorController.js
 const { calculateTotalCost } = require('../services/costService');
 const { calculateDemurrageRisk } = require('../services/riskService');
 const { checkFeasibility } = require('../services/feasibilityService');
+
+const PYTHON_ML_URL = process.env.PYTHON_ML_URL || 'http://localhost:8000';
 
 // @desc Calculate detailed chartering landed cost and What-If sensitivity
 // @route POST /api/calculator
@@ -30,6 +31,7 @@ const calculateCharterCost = async (req, res, next) => {
     const parsedDemurrage = parseFloat(demurrageRate) || 20000;
     const parsedWaiting = expectedWaiting !== undefined ? parseFloat(expectedWaiting) : 2.5;
 
+    // Local rule-based calculations
     const costResult = calculateTotalCost({
       cargoQuantity: parsedQty,
       cargoType,
@@ -61,6 +63,23 @@ const calculateCharterCost = async (req, res, next) => {
       vesselClass
     });
 
+    // Attempt to enrich response with Python ML predictions using native fetch
+    let mlAnalytics = null;
+    try {
+      const mlResponse = await fetch(`${PYTHON_ML_URL}/api/calculator`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(req.body),
+        signal: AbortSignal.timeout(2000)
+      });
+
+      if (mlResponse.ok) {
+        mlAnalytics = await mlResponse.json();
+      }
+    } catch (mlErr) {
+      console.warn('Python ML Service unreachable. Running on pure Node.js fallback.');
+    }
+
     res.json({
       success: true,
       data: {
@@ -72,10 +91,11 @@ const calculateCharterCost = async (req, res, next) => {
           warnings: feas.warnings
         },
         risk: {
-          score: riskResult.riskScore,
+          score: mlAnalytics ? mlAnalytics.demurrage_risk_score : riskResult.riskScore,
           level: riskResult.riskLevel,
           topContributors: riskResult.topContributors
-        }
+        },
+        mlOptimization: mlAnalytics ? mlAnalytics.optimization : null
       }
     });
   } catch (error) {

@@ -9,7 +9,7 @@ export const StatusBadge = ({ type = 'feasibility', value = 'FEASIBLE', size = '
   if (type === 'feasibility') {
     if (value === 'FEASIBLE') {
       return (
-        <span className={`inline-flex items-center gap-1 font-bold rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono ${sizeClasses}`}>
+        <span className={`inline-flex items-center gap-1 font-bold rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 font-mono ${sizeClasses}`}>
           <CheckCircle2 className="w-3.5 h-3.5" />
           <span>FEASIBLE</span>
         </span>
@@ -17,14 +17,14 @@ export const StatusBadge = ({ type = 'feasibility', value = 'FEASIBLE', size = '
     }
     if (value === 'INFEASIBLE') {
       return (
-        <span className={`inline-flex items-center gap-1 font-bold rounded-full bg-rose-500/10 border border-rose-500/30 text-rose-400 font-mono ${sizeClasses}`}>
+        <span className={`inline-flex items-center gap-1 font-bold rounded-full bg-rose-500/10 border border-rose-500/30 text-rose-600 dark:text-rose-400 font-mono ${sizeClasses}`}>
           <XCircle className="w-3.5 h-3.5" />
           <span>INFEASIBLE</span>
         </span>
       );
     }
     return (
-      <span className={`inline-flex items-center gap-1 font-bold rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 font-mono ${sizeClasses}`}>
+      <span className={`inline-flex items-center gap-1 font-bold rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400 font-mono ${sizeClasses}`}>
         <AlertTriangle className="w-3.5 h-3.5" />
         <span>CONDITIONAL</span>
       </span>
@@ -35,7 +35,7 @@ export const StatusBadge = ({ type = 'feasibility', value = 'FEASIBLE', size = '
   if (type === 'risk') {
     if (value === 'CRITICAL') {
       return (
-        <span className={`inline-flex items-center gap-1 font-bold rounded-full bg-rose-500/20 border border-rose-500/40 text-rose-300 font-mono ${sizeClasses}`}>
+        <span className={`inline-flex items-center gap-1 font-bold rounded-full bg-rose-500/20 border border-rose-500/40 text-rose-700 dark:text-rose-300 font-mono ${sizeClasses}`}>
           <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping" />
           <span>CRITICAL RISK</span>
         </span>
@@ -43,20 +43,20 @@ export const StatusBadge = ({ type = 'feasibility', value = 'FEASIBLE', size = '
     }
     if (value === 'HIGH') {
       return (
-        <span className={`inline-flex items-center gap-1 font-bold rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-400 font-mono ${sizeClasses}`}>
+        <span className={`inline-flex items-center gap-1 font-bold rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-700 dark:text-amber-400 font-mono ${sizeClasses}`}>
           <span>HIGH RISK</span>
         </span>
       );
     }
     if (value === 'MODERATE') {
       return (
-        <span className={`inline-flex items-center gap-1 font-bold rounded-full bg-cyan-500/15 border border-cyan-500/30 text-cyan-400 font-mono ${sizeClasses}`}>
+        <span className={`inline-flex items-center gap-1 font-bold rounded-full bg-cyan-500/15 border border-cyan-500/30 text-cyan-700 dark:text-cyan-400 font-mono ${sizeClasses}`}>
           <span>MODERATE RISK</span>
         </span>
       );
     }
     return (
-      <span className={`inline-flex items-center gap-1 font-bold rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 font-mono ${sizeClasses}`}>
+      <span className={`inline-flex items-center gap-1 font-bold rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-700 dark:text-emerald-400 font-mono ${sizeClasses}`}>
         <span>LOW RISK</span>
       </span>
     );
@@ -66,7 +66,7 @@ export const StatusBadge = ({ type = 'feasibility', value = 'FEASIBLE', size = '
   if (type === 'regime') {
     if (value === 'BULLISH') {
       return (
-        <span className={`inline-flex items-center gap-1 font-bold rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-mono ${sizeClasses}`}>
+        <span className={`inline-flex items-center gap-1 font-bold rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-700 dark:text-emerald-300 font-mono ${sizeClasses}`}>
           <TrendingUp className="w-3.5 h-3.5" />
           <span>BULLISH</span>
         </span>
@@ -74,7 +74,7 @@ export const StatusBadge = ({ type = 'feasibility', value = 'FEASIBLE', size = '
     }
     if (value === 'BEARISH') {
       return (
-        <span className={`inline-flex items-center gap-1 font-bold rounded-full bg-rose-500/20 border border-rose-500/40 text-rose-300 font-mono ${sizeClasses}`}>
+        <span className={`inline-flex items-center gap-1 font-bold rounded-full bg-rose-500/20 border border-rose-500/40 text-rose-700 dark:text-rose-300 font-mono ${sizeClasses}`}>
           <TrendingDown className="w-3.5 h-3.5" />
           <span>BEARISH</span>
         </span>
@@ -82,14 +82,14 @@ export const StatusBadge = ({ type = 'feasibility', value = 'FEASIBLE', size = '
     }
     if (value === 'HIGH_VOLATILITY') {
       return (
-        <span className={`inline-flex items-center gap-1 font-bold rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 font-mono ${sizeClasses}`}>
+        <span className={`inline-flex items-center gap-1 font-bold rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-700 dark:text-amber-300 font-mono ${sizeClasses}`}>
           <Activity className="w-3.5 h-3.5" />
           <span>HIGH VOLATILITY</span>
         </span>
       );
     }
     return (
-      <span className={`inline-flex items-center gap-1 font-bold rounded-full bg-slate-800 border border-slate-700 text-slate-300 font-mono ${sizeClasses}`}>
+      <span className={`inline-flex items-center gap-1 font-bold rounded-full bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-mono ${sizeClasses}`}>
         <span>SIDEWAYS</span>
       </span>
     );
@@ -106,7 +106,7 @@ export const StatusBadge = ({ type = 'feasibility', value = 'FEASIBLE', size = '
   }
 
   return (
-    <span className={`inline-flex items-center gap-1 font-semibold rounded-full bg-slate-800 border border-slate-700 text-slate-300 font-mono ${sizeClasses}`}>
+    <span className={`inline-flex items-center gap-1 font-semibold rounded-full bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-mono ${sizeClasses}`}>
       <span>{value}</span>
     </span>
   );

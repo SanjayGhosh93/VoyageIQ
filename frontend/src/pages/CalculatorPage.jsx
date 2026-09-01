@@ -69,23 +69,23 @@ export const CalculatorPage = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="p-6 rounded-3xl bg-gradient-to-r from-navy-900 via-slate-900 to-navy-950 border border-ocean-500/25 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="p-6 rounded-3xl bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950 border border-sky-500/25 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-xs font-mono font-bold text-ocean-400 uppercase tracking-widest">
+          <div className="flex items-center gap-2 text-xs font-mono font-bold text-sky-400 uppercase tracking-widest">
             <Calculator className="w-4 h-4 text-cyan-400" />
             <span>SAIL TOTAL LANDED COST & WHAT-IF ENGINE</span>
           </div>
-          <h1 className="text-2xl font-extrabold text-white tracking-tight mt-1">
+          <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight mt-1">
             Chartering Cost & Sensitivity Simulator
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
             Live evaluation of ocean freight, bunker fuel burn, port dues, stevedoring, and demurrage exposure
           </p>
         </div>
 
         <div className="text-right">
-          <div className="text-[10px] text-slate-400 uppercase font-mono">Current Landed Benchmark</div>
-          <div className="text-2xl font-extrabold text-cyan-400 font-mono">
+          <div className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-mono">Current Landed Benchmark</div>
+          <div className="text-2xl font-extrabold text-cyan-600 dark:text-cyan-400 font-mono">
             {formatCurrencyPerMT(costData?.costs?.costPerMT || 27.31)}
           </div>
         </div>
@@ -94,83 +94,83 @@ export const CalculatorPage = () => {
       {/* Main Grid: Parameters on Left, What-If Sliders on Right */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left 7 Cols: Form Inputs */}
-        <div className="lg:col-span-7 p-6 rounded-3xl glass-panel space-y-4">
-          <div className="text-xs font-mono font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2 pb-2 border-b border-slate-800">
-            <Sliders className="w-4 h-4 text-ocean-400" />
+        <div className="lg:col-span-7 p-6 rounded-3xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
+          <div className="text-xs font-mono font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 flex items-center gap-2 pb-2 border-b border-slate-200 dark:border-slate-800">
+            <Sliders className="w-4 h-4 text-sky-500 dark:text-sky-400" />
             <span>Chartering Voyage Parameters</span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="text-[11px] font-semibold text-slate-300 block mb-1">Cargo Quantity (MT)</label>
+              <label className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 block mb-1">Cargo Quantity (MT)</label>
               <input
                 type="number"
                 value={params.cargoQuantity}
                 onChange={(e) => setParams({ ...params, cargoQuantity: Number(e.target.value) })}
-                className="w-full glass-input rounded-xl px-3 py-2 text-xs text-white font-mono"
+                className="w-full rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:border-cyan-500 font-mono"
                 step="5000"
               />
             </div>
 
             <div>
-              <label className="text-[11px] font-semibold text-slate-300 block mb-1">Contract Type</label>
+              <label className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 block mb-1">Contract Type</label>
               <select
                 value={params.contractType}
                 onChange={(e) => setParams({ ...params, contractType: e.target.value })}
-                className="w-full glass-input rounded-xl px-3 py-2 text-xs text-white"
+                className="w-full rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:border-cyan-500"
               >
                 {CONTRACT_TYPES.map((c) => (
-                  <option key={c} value={c} className="bg-slate-900">{c}</option>
+                  <option key={c} value={c} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">{c}</option>
                 ))}
               </select>
             </div>
 
             <div>
-              <label className="text-[11px] font-semibold text-slate-300 block mb-1">Origin Port</label>
+              <label className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 block mb-1">Origin Port</label>
               <select
                 value={params.origin}
                 onChange={(e) => setParams({ ...params, origin: e.target.value })}
-                className="w-full glass-input rounded-xl px-3 py-2 text-xs text-white"
+                className="w-full rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:border-cyan-500"
               >
                 {ORIGIN_PORTS.map((p) => (
-                  <option key={p.value} value={p.value} className="bg-slate-900">{p.label}</option>
+                  <option key={p.value} value={p.value} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">{p.label}</option>
                 ))}
               </select>
             </div>
 
             <div>
-              <label className="text-[11px] font-semibold text-slate-300 block mb-1">Destination Port</label>
+              <label className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 block mb-1">Destination Port</label>
               <select
                 value={params.destination}
                 onChange={(e) => setParams({ ...params, destination: e.target.value })}
-                className="w-full glass-input rounded-xl px-3 py-2 text-xs text-white"
+                className="w-full rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:border-cyan-500"
               >
                 {DESTINATION_PORTS.map((p) => (
-                  <option key={p.value} value={p.value} className="bg-slate-900">{p.label}</option>
+                  <option key={p.value} value={p.value} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">{p.label}</option>
                 ))}
               </select>
             </div>
 
             <div>
-              <label className="text-[11px] font-semibold text-slate-300 block mb-1">Vessel Class</label>
+              <label className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 block mb-1">Vessel Class</label>
               <select
                 value={params.vesselClass}
                 onChange={(e) => setParams({ ...params, vesselClass: e.target.value })}
-                className="w-full glass-input rounded-xl px-3 py-2 text-xs text-white"
+                className="w-full rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:border-cyan-500"
               >
                 {VESSEL_CLASSES.map((v) => (
-                  <option key={v.value} value={v.value} className="bg-slate-900">{v.label}</option>
+                  <option key={v.value} value={v.value} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">{v.label}</option>
                 ))}
               </select>
             </div>
 
             <div>
-              <label className="text-[11px] font-semibold text-slate-300 block mb-1">Base Freight ($/MT)</label>
+              <label className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 block mb-1">Base Freight ($/MT)</label>
               <input
                 type="number"
                 value={params.freightRate}
                 onChange={(e) => setParams({ ...params, freightRate: Number(e.target.value) })}
-                className="w-full glass-input rounded-xl px-3 py-2 text-xs text-white font-mono"
+                className="w-full rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:border-cyan-500 font-mono"
                 step="0.1"
               />
             </div>
@@ -178,7 +178,7 @@ export const CalculatorPage = () => {
         </div>
 
         {/* Right 5 Cols: Interactive What-If Sliders */}
-        <div className="lg:col-span-5 p-6 rounded-3xl bg-gradient-to-b from-slate-900 to-navy-950 border border-ocean-500/30 shadow-xl space-y-5">
+        <div className="lg:col-span-5 p-6 rounded-3xl bg-gradient-to-b from-slate-900 to-slate-950 border border-sky-500/30 shadow-xl space-y-5">
           <div className="flex items-center justify-between pb-2 border-b border-slate-800">
             <div className="flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-amber-400" />
@@ -192,7 +192,7 @@ export const CalculatorPage = () => {
                 setFreightDelta(0);
                 setWaitingDaysOverride(2.5);
               }}
-              className="text-[11px] text-ocean-400 hover:underline font-mono"
+              className="text-[11px] text-sky-400 hover:underline font-mono cursor-pointer"
             >
               Reset Sliders
             </button>
@@ -316,11 +316,11 @@ export const CalculatorPage = () => {
           {/* Detailed Cost Breakdown & Sensitivity Charts */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             {/* Left 6 Cols: Cost Breakdown Donut Chart */}
-            <div className="lg:col-span-6 p-6 rounded-3xl glass-panel space-y-3">
-              <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+            <div className="lg:col-span-6 p-6 rounded-3xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 shadow-xl space-y-3">
+              <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-800">
                 <div className="flex items-center gap-2">
-                  <PieIcon className="w-4 h-4 text-ocean-400" />
-                  <h3 className="text-sm font-bold text-white uppercase font-mono tracking-wider">
+                  <PieIcon className="w-4 h-4 text-sky-500 dark:text-sky-400" />
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase font-mono tracking-wider">
                     Landed Cost Component Breakdown
                   </h3>
                 </div>
@@ -330,11 +330,11 @@ export const CalculatorPage = () => {
             </div>
 
             {/* Right 6 Cols: Sensitivity Bar Chart */}
-            <div className="lg:col-span-6 p-6 rounded-3xl glass-panel space-y-3">
-              <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+            <div className="lg:col-span-6 p-6 rounded-3xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 shadow-xl space-y-3">
+              <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-800">
                 <div className="flex items-center gap-2">
                   <BarChart2 className="w-4 h-4 text-amber-400" />
-                  <h3 className="text-sm font-bold text-white uppercase font-mono tracking-wider">
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase font-mono tracking-wider">
                     Macro Sensitivity Comparison
                   </h3>
                 </div>

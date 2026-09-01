@@ -17,10 +17,8 @@ import {
   Clock,
   FileSpreadsheet,
   Presentation,
-  Sliders,
   ChevronLeft,
-  ChevronRight,
-  Sparkles
+  ChevronRight
 } from 'lucide-react';
 
 const NAV_ITEMS = [
@@ -46,14 +44,14 @@ export const Sidebar = ({ onOpenDemo }) => {
 
   return (
     <aside
-      className={`relative z-30 flex flex-col bg-white/75 dark:bg-navy-950/75 backdrop-blur-xl border-r border-slate-200/60 dark:border-slate-800/60 transition-all duration-300 shadow-xl ${
+      className={`relative z-30 flex flex-col bg-white/75 dark:bg-slate-950/75 backdrop-blur-xl border-r border-slate-200/60 dark:border-slate-800/60 transition-all duration-300 shadow-xl ${
         collapsed ? 'w-20' : 'w-64'
       }`}
     >
       {/* Brand Header */}
       <div className="h-16 flex items-center justify-between px-4 border-b border-slate-200/60 dark:border-slate-800/60 bg-transparent">
         <Link to="/" className="flex items-center gap-3 overflow-hidden">
-          <div className="w-10 h-10 rounded-xl bg-slate-900/40 p-1 flex items-center justify-center border border-ocean-500/30 shadow-lg shadow-ocean-500/20 shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-slate-900/40 p-1 flex items-center justify-center border border-sky-500/30 shadow-lg shadow-sky-500/20 shrink-0">
             <img src="/app-logo.png" alt="OCEANCHARTER AI" className="w-full h-full object-contain filter drop-shadow" />
           </div>
           {!collapsed && (
@@ -81,7 +79,7 @@ export const Sidebar = ({ onOpenDemo }) => {
               className={({ isActive }) =>
                 `flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${
                   isActive
-                    ? 'bg-gradient-to-r from-ocean-600 to-ocean-700 text-white shadow-lg shadow-ocean-600/20 font-semibold'
+                    ? 'bg-gradient-to-r from-sky-600 to-sky-700 text-white shadow-lg shadow-sky-600/20 font-semibold'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/60'
                 }`
               }

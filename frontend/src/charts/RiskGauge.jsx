@@ -3,48 +3,58 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ShieldAlert, AlertTriangle, CheckCircle, Flame } from 'lucide-react';
 
-export const RiskGauge = ({ score = 24, level = 'LOW', topContributors = [] }) => {
+export const RiskGauge = ({ score = 24, level, topContributors = [] }) => {
   // Score clamped between 0 and 100
-  const normalizedScore = Math.min(100, Math.max(0, score));
+  const normalizedScore = Math.min(100, Math.max(0, Number(score) || 0));
 
-  // Circular gauge parameters
-  const radius = 80;
-  const strokeWidth = 14;
-  const circumference = Math.PI * radius; // Half circle
-  const strokeDashoffset = circumference - (normalizedScore / 100) * circumference;
-
-  let colorScheme = {
-    stroke: '#10b981',
-    text: 'text-emerald-400',
-    bgBadge: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300',
-    icon: <CheckCircle className="w-5 h-5 text-emerald-400" />
+  // Dynamic color, icon, and level mapping based on score
+  const getRiskConfig = (val) => {
+    if (val >= 76) {
+      return {
+        level: level || 'CRITICAL',
+        stroke: '#f43f5e',
+        text: 'text-rose-400',
+        bgBadge: 'bg-rose-500/10 border-rose-500/30 text-rose-300',
+        icon: <Flame className="w-4 h-4 text-rose-400" />
+      };
+    }
+    if (val >= 51) {
+      return {
+        level: level || 'HIGH',
+        stroke: '#f59e0b',
+        text: 'text-amber-400',
+        bgBadge: 'bg-amber-500/10 border-amber-500/30 text-amber-300',
+        icon: <AlertTriangle className="w-4 h-4 text-amber-400" />
+      };
+    }
+    if (val >= 26) {
+      return {
+        level: level || 'MODERATE',
+        stroke: '#0ea5e9',
+        text: 'text-sky-400',
+        bgBadge: 'bg-sky-500/10 border-sky-500/30 text-sky-300',
+        icon: <ShieldAlert className="w-4 h-4 text-sky-400" />
+      };
+    }
+    return {
+      level: level || 'LOW',
+      stroke: '#10b981',
+      text: 'text-emerald-400',
+      bgBadge: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300',
+      icon: <CheckCircle className="w-4 h-4 text-emerald-400" />
+    };
   };
 
-  if (normalizedScore >= 76) {
-    colorScheme = {
-      stroke: '#f43f5e',
-      text: 'text-rose-400',
-      bgBadge: 'bg-rose-500/10 border-rose-500/30 text-rose-300',
-      icon: <Flame className="w-5 h-5 text-rose-400" />
-    };
-  } else if (normalizedScore >= 51) {
-    colorScheme = {
-      stroke: '#f59e0b',
-      text: 'text-amber-400',
-      bgBadge: 'bg-amber-500/10 border-amber-500/30 text-amber-300',
-      icon: <AlertTriangle className="w-5 h-5 text-amber-400" />
-    };
-  } else if (normalizedScore >= 26) {
-    colorScheme = {
-      stroke: '#0ea5e9',
-      text: 'text-ocean-400',
-      bgBadge: 'bg-ocean-500/10 border-ocean-500/30 text-ocean-300',
-      icon: <ShieldAlert className="w-5 h-5 text-ocean-400" />
-    };
-  }
+  const colorScheme = getRiskConfig(normalizedScore);
+
+  // Circular gauge parameters (Semi-circle Arc)
+  const radius = 80;
+  const strokeWidth = 14;
+  const circumference = Math.PI * radius;
+  const strokeDashoffset = circumference - (normalizedScore / 100) * circumference;
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center w-full">
       {/* Semi-circular gauge SVG */}
       <div className="relative w-64 h-36 flex items-center justify-center">
         <svg className="w-64 h-36" viewBox="0 0 200 110">
@@ -57,7 +67,7 @@ export const RiskGauge = ({ score = 24, level = 'LOW', topContributors = [] }) =
             </linearGradient>
           </defs>
 
-          {/* Background Track */}
+          {/* Track background */}
           <path
             d="M 20 100 A 80 80 0 0 1 180 100"
             fill="none"
@@ -93,7 +103,7 @@ export const RiskGauge = ({ score = 24, level = 'LOW', topContributors = [] }) =
           
           <div className={`mt-1 text-xs font-semibold px-2.5 py-0.5 rounded-full border flex items-center gap-1.5 ${colorScheme.bgBadge}`}>
             {colorScheme.icon}
-            <span>{level.toUpperCase()} RISK</span>
+            <span>{colorScheme.level.toUpperCase()} RISK</span>
           </div>
         </div>
       </div>
@@ -105,9 +115,11 @@ export const RiskGauge = ({ score = 24, level = 'LOW', topContributors = [] }) =
             Top Risk Contributors
           </div>
           {topContributors.slice(0, 4).map((c, i) => (
-            <div key={i} className="flex items-center justify-between text-xs py-1 px-2.5 rounded bg-slate-900/60 border border-slate-800">
-              <span className="text-slate-300 font-medium">{c.factor}</span>
-              <span className="font-mono text-amber-400 font-bold">+{c.contribution} pts</span>
+            <div key={i} className="flex items-center justify-between text-xs py-1.5 px-3 rounded bg-slate-900/60 border border-slate-800">
+              <span className="text-slate-300 font-medium">{c.factor || c.name || 'Risk Factor'}</span>
+              <span className="font-mono text-amber-400 font-bold">
+                +{c.contribution ?? c.impact ?? 0} pts
+              </span>
             </div>
           ))}
         </div>

@@ -4,7 +4,12 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const { getIsConnected } = require('../config/db');
 const { inMemoryStore, SEED_USERS } = require('../data/seedData');
+const { mysqlPool } = require('../config/mysql');
 
+const getUsers = async (req, res) => {
+  const [rows] = await mysqlPool.execute('SELECT * FROM users');
+  res.json(rows);
+};
 const generateToken = (id, email, role, name) => {
   return jwt.sign(
     { id, email, role, name },
