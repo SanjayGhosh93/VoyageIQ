@@ -7,12 +7,12 @@ const { mysqlPool } = require('../config/mysql');
 
 // Resilient fallback dataset for MySQL cargo history when DB is unreachable
 const FALLBACK_CARGO_DATASET = [
-  { id: 1, year: 2021, cargo_type: 'Coking Coal', volume_mt: 14500000, origin_port: 'Gladstone', destination_port: 'Paradip', avg_freight_usd: 16.50 },
-  { id: 2, year: 2022, cargo_type: 'Coking Coal', volume_mt: 15200000, origin_port: 'Gladstone', destination_port: 'Paradip', avg_freight_usd: 22.80 },
-  { id: 3, year: 2023, cargo_type: 'Iron Ore', volume_mt: 8900000, origin_port: 'Port Hedland', destination_port: 'Visakhapatnam', avg_freight_usd: 14.10 },
-  { id: 4, year: 2024, cargo_type: 'Thermal Coal', volume_mt: 11300000, origin_port: 'Banjarmasin', destination_port: 'Haldia', avg_freight_usd: 12.90 },
-  { id: 5, year: 2025, cargo_type: 'Coking Coal', volume_mt: 16800000, origin_port: 'Newcastle', destination_port: 'Paradip', avg_freight_usd: 18.75 },
-  { id: 6, year: 2026, cargo_type: 'Coking Coal', volume_mt: 17500000, origin_port: 'Gladstone', destination_port: 'Paradip', avg_freight_usd: 19.20 }
+  { id: 1, year: 2021, item: 'No. of Vessels', dry_cargo_liner: 45, dry_cargo_bulk_carrier: 128, oil_tanker: 84, passenger_cum_cargo: 12, off_shore_supply: 34, specialised_off_shore: 18, timber_carrier: 8, total: 329 },
+  { id: 2, year: 2022, item: 'No. of Vessels', dry_cargo_liner: 48, dry_cargo_bulk_carrier: 135, oil_tanker: 90, passenger_cum_cargo: 14, off_shore_supply: 38, specialised_off_shore: 20, timber_carrier: 9, total: 354 },
+  { id: 3, year: 2023, item: 'No. of Vessels', dry_cargo_liner: 52, dry_cargo_bulk_carrier: 142, oil_tanker: 96, passenger_cum_cargo: 15, off_shore_supply: 42, specialised_off_shore: 22, timber_carrier: 10, total: 379 },
+  { id: 4, year: 2024, item: 'GRT (in 000s)', dry_cargo_liner: 1420, dry_cargo_bulk_carrier: 4850, oil_tanker: 3200, passenger_cum_cargo: 210, off_shore_supply: 450, specialised_off_shore: 310, timber_carrier: 180, total: 10620 },
+  { id: 5, year: 2025, item: 'DWT (in 000s)', dry_cargo_liner: 2100, dry_cargo_bulk_carrier: 7890, oil_tanker: 5400, passenger_cum_cargo: 290, off_shore_supply: 680, specialised_off_shore: 490, timber_carrier: 260, total: 17110 },
+  { id: 6, year: 2026, item: 'Total Handled MT', dry_cargo_liner: 2450, dry_cargo_bulk_carrier: 8920, oil_tanker: 5900, passenger_cum_cargo: 320, off_shore_supply: 740, specialised_off_shore: 530, timber_carrier: 290, total: 19150 }
 ];
 
 // Helper to generate dynamic synthetic freight history when MongoDB returns no rows

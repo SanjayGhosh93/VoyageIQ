@@ -7,6 +7,7 @@
     "start": "node server.js",
     "dev": "nodemon server.js",
     "seed": "node data/seedData.js",
+    "seed:cargo": "node scripts/seedCargo.js",
     "clean": "node data/clearData.js",
     "clear": "node data/clearData.js"
   },
