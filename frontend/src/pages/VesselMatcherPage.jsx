@@ -15,17 +15,7 @@ import { LoadingState } from '../components/LoadingState';
 import { feasibilityService } from '../services/api';
 import { ORIGIN_PORTS, DESTINATION_PORTS, VESSEL_CLASSES, CARGO_TYPES } from '../utils/constants';
 import { formatCurrency, formatCurrencyPerMT } from '../utils/formatters';
-import { ConstraintViolationBanner } from '../components/ConstraintViolationBanner';
 
-// Inside your feasibility check render block:
-{isFeasible === false && (
-  <ConstraintViolationBanner
-    vesselClass="HANDYSIZE"
-    port="Visakhapatnam"
-    cargoParcelMT={120000}
-    deadweightMT={33600}
-  />
-)}
 export const VesselMatcherPage = () => {
   const [form, setForm] = useState({
     cargoQuantity: 120000,

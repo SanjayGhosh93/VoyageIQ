@@ -53,16 +53,16 @@ export const RiskCenterPage = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="p-6 rounded-3xl bg-gradient-to-r from-navy-900 via-slate-900 to-navy-950 border border-ocean-500/25 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="p-6 rounded-3xl bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950 border border-sky-500/25 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-xs font-mono font-bold text-amber-400 uppercase tracking-widest">
-            <ShieldAlert className="w-4 h-4 text-amber-400" />
+          <div className="flex items-center gap-2 text-xs font-mono font-bold text-amber-500 dark:text-amber-400 uppercase tracking-widest">
+            <ShieldAlert className="w-4 h-4 text-amber-500 dark:text-amber-400" />
             <span>SAIL DEMURRAGE RISK RADAR</span>
           </div>
-          <h1 className="text-2xl font-extrabold text-white tracking-tight mt-1">
+          <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight mt-1">
             Demurrage Risk Center (0–100 Index)
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
             Weighted multi-factor analysis: Monsoon (15%), Queue (20%), Weather (20%), Berths (15%), Draught (20%), TPH (10%)
           </p>
         </div>
@@ -73,43 +73,43 @@ export const RiskCenterPage = () => {
       </div>
 
       {/* Control Selector Bar */}
-      <div className="p-6 rounded-3xl glass-panel space-y-4">
-        <div className="text-xs font-mono font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
-          <Sliders className="w-4 h-4 text-ocean-400" />
+      <div className="p-6 rounded-3xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
+        <div className="text-xs font-mono font-bold uppercase tracking-wider text-slate-700 dark:text-slate-400 flex items-center gap-2">
+          <Sliders className="w-4 h-4 text-sky-600 dark:text-sky-400" />
           <span>Port & Maritime Risk Conditions</span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div>
-            <label className="text-[11px] font-semibold text-slate-300 block mb-1">Discharge Port</label>
+            <label className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 block mb-1">Discharge Port</label>
             <select
               value={destination}
               onChange={(e) => setDestination(e.target.value)}
-              className="w-full glass-input rounded-xl px-3 py-2 text-xs text-white"
+              className="w-full rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:border-cyan-500"
             >
               {DESTINATION_PORTS.map((p) => (
-                <option key={p.value} value={p.value} className="bg-slate-900">{p.label}</option>
+                <option key={p.value} value={p.value} className="bg-white dark:bg-slate-900">{p.label}</option>
               ))}
             </select>
           </div>
 
           <div>
-            <label className="text-[11px] font-semibold text-slate-300 block mb-1">Vessel Class</label>
+            <label className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 block mb-1">Vessel Class</label>
             <select
               value={vesselClass}
               onChange={(e) => setVesselClass(e.target.value)}
-              className="w-full glass-input rounded-xl px-3 py-2 text-xs text-white"
+              className="w-full rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:border-cyan-500"
             >
               {VESSEL_CLASSES.map((v) => (
-                <option key={v.value} value={v.value} className="bg-slate-900">{v.label}</option>
+                <option key={v.value} value={v.value} className="bg-white dark:bg-slate-900">{v.label}</option>
               ))}
             </select>
           </div>
 
           <div>
-            <div className="flex justify-between text-[11px] font-semibold text-slate-300 mb-1">
+            <div className="flex justify-between text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
               <span>Port Waiting Queue:</span>
-              <span className="font-mono text-amber-400 font-bold">{overrideQueue} Vessels</span>
+              <span className="font-mono text-amber-600 dark:text-amber-400 font-bold">{overrideQueue} Vessels</span>
             </div>
             <input
               type="range"
@@ -117,14 +117,14 @@ export const RiskCenterPage = () => {
               max="12"
               value={overrideQueue}
               onChange={(e) => setOverrideQueue(Number(e.target.value))}
-              className="w-full accent-amber-400 h-2 bg-slate-800 rounded-lg cursor-pointer"
+              className="w-full accent-amber-500 h-2 bg-slate-200 dark:bg-slate-800 rounded-lg cursor-pointer"
             />
           </div>
 
           <div>
-            <div className="flex justify-between text-[11px] font-semibold text-slate-300 mb-1">
+            <div className="flex justify-between text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
               <span>Weather / Swell Intensity:</span>
-              <span className="font-mono text-cyan-400 font-bold">{weatherScore}/100</span>
+              <span className="font-mono text-cyan-600 dark:text-cyan-400 font-bold">{weatherScore}/100</span>
             </div>
             <input
               type="range"
@@ -132,7 +132,7 @@ export const RiskCenterPage = () => {
               max="100"
               value={weatherScore}
               onChange={(e) => setWeatherScore(Number(e.target.value))}
-              className="w-full accent-cyan-400 h-2 bg-slate-800 rounded-lg cursor-pointer"
+              className="w-full accent-cyan-500 h-2 bg-slate-200 dark:bg-slate-800 rounded-lg cursor-pointer"
             />
           </div>
         </div>
@@ -146,8 +146,8 @@ export const RiskCenterPage = () => {
             {/* Risk Gauge & Advice Card */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
               {/* Left 5 Cols: Animated Circular Gauge */}
-              <div className="lg:col-span-5 p-6 rounded-3xl glass-panel flex flex-col items-center justify-center space-y-4">
-                <div className="text-xs font-mono uppercase font-bold text-slate-400">
+              <div className="lg:col-span-5 p-6 rounded-3xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 shadow-xl flex flex-col items-center justify-center space-y-4">
+                <div className="text-xs font-mono uppercase font-bold text-slate-500 dark:text-slate-400">
                   Calculated Demurrage Risk Index
                 </div>
                 <RiskGauge
@@ -158,12 +158,12 @@ export const RiskCenterPage = () => {
               </div>
 
               {/* Right 7 Cols: Operational Mitigation Advice & Factor Breakdown */}
-              <div className="lg:col-span-7 p-6 rounded-3xl bg-gradient-to-b from-slate-900 to-navy-950 border border-ocean-500/30 shadow-xl space-y-4">
+              <div className="lg:col-span-7 p-6 rounded-3xl bg-gradient-to-b from-slate-900 to-slate-950 border border-sky-500/30 shadow-xl space-y-4">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-800">
                   <h3 className="text-sm font-bold text-white uppercase font-mono tracking-wider">
                     Demurrage Mitigation Directive
                   </h3>
-                  <span className="text-xs font-mono text-ocean-400 font-bold">
+                  <span className="text-xs font-mono text-sky-400 font-bold">
                     Target: {destination}
                   </span>
                 </div>
@@ -195,13 +195,13 @@ export const RiskCenterPage = () => {
             </div>
 
             {/* East Coast India Comparative Port Risks Matrix */}
-            <div className="p-6 rounded-3xl glass-panel space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-                <h3 className="text-sm font-bold text-white uppercase font-mono tracking-wider">
+            <div className="p-6 rounded-3xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase font-mono tracking-wider">
                   Comparative Demurrage Risk Across Indian East Coast Ports
                 </h3>
-                <span className="text-xs font-mono text-slate-400">
-                  Vessel: <strong className="text-white">{vesselClass}</strong>
+                <span className="text-xs font-mono text-slate-500 dark:text-slate-400">
+                  Vessel: <strong className="text-slate-900 dark:text-white">{vesselClass}</strong>
                 </span>
               </div>
 
@@ -212,26 +212,26 @@ export const RiskCenterPage = () => {
                     onClick={() => setDestination(pr.portName)}
                     className={`p-4 rounded-2xl border transition-all cursor-pointer ${
                       destination === pr.portName
-                        ? 'bg-slate-900 border-amber-400/60 shadow-lg'
-                        : 'bg-slate-900/60 border-slate-800 hover:border-slate-700'
+                        ? 'bg-slate-50 dark:bg-slate-900 border-amber-500/60 shadow-lg ring-1 ring-amber-500/30'
+                        : 'bg-slate-50/60 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
                     }`}
                   >
                     <div className="flex items-center justify-between mb-1.5">
-                      <span className="font-bold text-white text-sm">{pr.portName}</span>
+                      <span className="font-bold text-slate-900 dark:text-white text-sm">{pr.portName}</span>
                       <StatusBadge type="risk" value={pr.riskLevel} />
                     </div>
-                    <div className="grid grid-cols-3 gap-1 text-[11px] font-mono text-slate-400 pt-2 border-t border-slate-800/80">
+                    <div className="grid grid-cols-3 gap-1 text-[11px] font-mono text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-200 dark:border-slate-800/80">
                       <div>
-                        <span className="text-slate-500 block text-[9px]">Draft</span>
-                        <span className="text-slate-200">{pr.berthDraft}m</span>
+                        <span className="text-slate-400 dark:text-slate-500 block text-[9px]">Draft</span>
+                        <span className="text-slate-800 dark:text-slate-200">{pr.berthDraft}m</span>
                       </div>
                       <div>
-                        <span className="text-slate-500 block text-[9px]">Queue</span>
-                        <span className="text-slate-200">{pr.queueLength} Ships</span>
+                        <span className="text-slate-400 dark:text-slate-500 block text-[9px]">Queue</span>
+                        <span className="text-slate-800 dark:text-slate-200">{pr.queueLength} Ships</span>
                       </div>
                       <div>
-                        <span className="text-slate-500 block text-[9px]">Risk Score</span>
-                        <span className="text-amber-400 font-bold">{pr.riskScore}/100</span>
+                        <span className="text-slate-400 dark:text-slate-500 block text-[9px]">Risk Score</span>
+                        <span className="text-amber-600 dark:text-amber-400 font-bold">{pr.riskScore}/100</span>
                       </div>
                     </div>
                   </div>
