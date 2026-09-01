@@ -39,6 +39,7 @@ Strictly developed with **Pure MERN Stack** (.jsx / .js / .css — No TypeScript
 cd backend
 npm install
 npm run seed     # Seeds 730 days synthetic freight time-series, 17 ports, fleet, and alerts
+npm run clean    # Purges/deletes all dummy and seeded data from the database
 npm run dev      # Runs Express REST API on http://localhost:5000
 ```
 

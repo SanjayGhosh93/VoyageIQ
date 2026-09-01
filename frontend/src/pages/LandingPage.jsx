@@ -1,7 +1,6 @@
-// frontend/src/pages/LandingPage.jsx
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Anchor, 
   TrendingUp, 
@@ -17,15 +16,18 @@ import {
   DollarSign, 
   Layers,
   FileSpreadsheet,
-  Award
+  Award,
+  Video
 } from 'lucide-react';
 import { RouteVisualizer } from '../components/RouteVisualizer';
 import { SihDemoModal } from '../components/SihDemoModal';
+import { IntroVideoSplash } from '../components/IntroVideoSplash';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { APP_CONFIG } from '../utils/constants';
 
 export const LandingPage = () => {
   const [demoOpen, setDemoOpen] = useState(false);
+  const [showIntro, setShowIntro] = useState(true);
   const navigate = useNavigate();
   const videoRef = React.useRef(null);
 
@@ -84,6 +86,14 @@ export const LandingPage = () => {
             {/* Day / Night Mode Toggle */}
             <ThemeToggle />
 
+            <button
+              onClick={() => setShowIntro(true)}
+              className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-cyan-300 border border-cyan-500/30 text-xs font-mono font-semibold transition-all hover:border-cyan-400"
+            >
+              <Video className="w-3.5 h-3.5 text-cyan-400" />
+              <span>Watch Intro</span>
+            </button>
+
             <Link
               to="/presentation"
               className="hidden sm:inline-flex text-xs font-semibold text-ocean-300 hover:text-white transition-colors"
@@ -139,6 +149,14 @@ export const LandingPage = () => {
                 className="px-6 py-3.5 rounded-2xl bg-slate-900/85 hover:bg-slate-800 text-white border border-slate-700/80 font-bold text-sm font-mono transition-all flex items-center gap-2 shadow-xl backdrop-blur-md"
               >
                 <span>EXPLORE DASHBOARD</span>
+              </button>
+
+              <button
+                onClick={() => setShowIntro(true)}
+                className="px-4 py-3.5 rounded-2xl bg-ocean-950/60 hover:bg-ocean-900/80 text-ocean-300 border border-ocean-500/40 font-bold text-sm font-mono transition-all flex items-center gap-2 backdrop-blur-md"
+              >
+                <Video className="w-4 h-4 text-cyan-400" />
+                <span>WATCH ANIMATION</span>
               </button>
             </div>
 
@@ -261,6 +279,13 @@ export const LandingPage = () => {
 
       {/* Global SIH Modal */}
       <SihDemoModal isOpen={demoOpen} onClose={() => setDemoOpen(false)} />
+
+      {/* Cinematic Intro Animation Video Overlay */}
+      <AnimatePresence>
+        {showIntro && (
+          <IntroVideoSplash onFinish={() => setShowIntro(false)} />
+        )}
+      </AnimatePresence>
 
       {/* Footer */}
       <footer className="mt-auto border-t border-slate-200/60 dark:border-slate-800/80 bg-white/70 dark:bg-navy-950/80 backdrop-blur-xl py-6 px-6 text-xs transition-colors">
