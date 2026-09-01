@@ -94,12 +94,6 @@ export const LandingPage = () => {
               <span>Watch Intro</span>
             </button>
 
-            <Link
-              to="/presentation"
-              className="hidden sm:inline-flex text-xs font-semibold text-ocean-300 hover:text-white transition-colors"
-            >
-              Judge Deck
-            </Link>
             <button
               onClick={() => setDemoOpen(true)}
               className="px-3.5 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs font-mono transition-all shadow-md shadow-amber-400/20 flex items-center gap-1.5"

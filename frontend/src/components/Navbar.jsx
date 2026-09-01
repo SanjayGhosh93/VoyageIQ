@@ -249,15 +249,6 @@ export const Navbar = ({ onOpenDemo }) => {
           <span>Home</span>
         </Link>
 
-        {/* SIH Judge Presentation Mode Button */}
-        <Link
-          to="/presentation"
-          className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-sky-600 dark:text-sky-300 bg-sky-500/10 dark:bg-sky-950/60 hover:bg-sky-500/20 dark:hover:bg-sky-900/80 border border-sky-500/30 rounded-xl transition-all shadow-sm"
-        >
-          <Presentation className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" />
-          <span>Judge Presentation</span>
-        </Link>
-
         {/* 1-Click RUN SIH DEMO Button */}
         <button
           onClick={onOpenDemo}
