@@ -14,6 +14,27 @@ import {
 export const MarketTrendChart = ({ data = [], height = 320 }) => {
   const [activeMetric, setActiveMetric] = useState('ratePerMT');
 
+  if (!data || data.length === 0) {
+    return (
+      <div 
+        className="w-full flex items-center justify-center border border-slate-800 rounded-xl bg-slate-900/50 text-slate-500 text-sm font-mono"
+        style={{ height }}
+      >
+        No historical market data available for the selected parameters.
+      </div>
+    );
+  }
+
+  // Ensure metric values are parsed as numbers to prevent SVG rendering glitches
+  const formattedData = data.map((item) => ({
+    ...item,
+    ratePerMT: item.ratePerMT !== undefined ? Number(item.ratePerMT) : null,
+    marketIndexBDI: item.marketIndexBDI !== undefined ? Number(item.marketIndexBDI) : null,
+    fuelPriceVLSFO: item.fuelPriceVLSFO !== undefined ? Number(item.fuelPriceVLSFO) : null,
+    ema20: item.ema20 !== undefined ? Number(item.ema20) : null,
+    ema50: item.ema50 !== undefined ? Number(item.ema50) : null
+  }));
+
   return (
     <div className="w-full">
       {/* Metric Selectors */}
@@ -22,7 +43,7 @@ export const MarketTrendChart = ({ data = [], height = 320 }) => {
           onClick={() => setActiveMetric('ratePerMT')}
           className={`px-3 py-1 text-xs rounded-lg font-medium transition-all ${
             activeMetric === 'ratePerMT'
-              ? 'bg-ocean-500 text-white shadow-lg shadow-ocean-500/25'
+              ? 'bg-sky-500 text-white shadow-lg shadow-sky-500/25'
               : 'bg-slate-800 text-slate-400 hover:text-white'
           }`}
         >
@@ -50,17 +71,27 @@ export const MarketTrendChart = ({ data = [], height = 320 }) => {
         </button>
       </div>
 
+      {/* Chart Canvas */}
       <div className="w-full relative" style={{ height }}>
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data} margin={{ top: 10, right: 15, bottom: 10, left: 0 }}>
+          <LineChart data={formattedData} margin={{ top: 10, right: 15, bottom: 10, left: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" opacity={0.6} />
-            <XAxis dataKey="date" stroke="#64748b" tick={{ fill: '#94a3b8', fontSize: 11 }} tickLine={false} />
+            
+            <XAxis 
+              dataKey="date" 
+              stroke="#64748b" 
+              tick={{ fill: '#94a3b8', fontSize: 11 }} 
+              tickLine={false} 
+            />
+            
             <YAxis 
               stroke="#64748b" 
               tick={{ fill: '#94a3b8', fontSize: 11 }} 
               tickLine={false}
-              tickFormatter={(v) => activeMetric === 'marketIndexBDI' ? v : `$${v}`}
+              domain={['auto', 'auto']}
+              tickFormatter={(v) => activeMetric === 'marketIndexBDI' ? `${v} pts` : `$${v}`}
             />
+            
             <Tooltip
               contentStyle={{
                 backgroundColor: '#0f172a',
@@ -69,23 +100,63 @@ export const MarketTrendChart = ({ data = [], height = 320 }) => {
                 fontSize: '12px',
                 color: '#f8fafc'
               }}
+              formatter={(value, name) => [
+                activeMetric === 'marketIndexBDI' ? `${value} pts` : `$${Number(value).toFixed(2)}`,
+                name
+              ]}
             />
-            <Legend wrapperStyle={{ fontSize: '12px' }} />
+            
+            <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '8px' }} />
 
             {activeMetric === 'ratePerMT' && (
               <>
-                <Line type="monotone" dataKey="ratePerMT" stroke="#38bdf8" strokeWidth={2.5} dot={false} name="Spot Freight ($/MT)" />
-                <Line type="monotone" dataKey="ema20" stroke="#34d399" strokeWidth={1.5} dot={false} name="EMA 20" />
-                <Line type="monotone" dataKey="ema50" stroke="#c084fc" strokeWidth={1.5} dot={false} name="EMA 50" />
+                <Line 
+                  type="monotone" 
+                  dataKey="ratePerMT" 
+                  stroke="#38bdf8" 
+                  strokeWidth={2.5} 
+                  dot={false} 
+                  name="Spot Freight ($/MT)" 
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="ema20" 
+                  stroke="#34d399" 
+                  strokeWidth={1.5} 
+                  dot={false} 
+                  name="EMA 20" 
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="ema50" 
+                  stroke="#c084fc" 
+                  strokeWidth={1.5} 
+                  dot={false} 
+                  name="EMA 50" 
+                />
               </>
             )}
 
             {activeMetric === 'marketIndexBDI' && (
-              <Line type="monotone" dataKey="marketIndexBDI" stroke="#fbbf24" strokeWidth={2.5} dot={false} name="Baltic Dry Index (Pts)" />
+              <Line 
+                type="monotone" 
+                dataKey="marketIndexBDI" 
+                stroke="#fbbf24" 
+                strokeWidth={2.5} 
+                dot={false} 
+                name="Baltic Dry Index (Pts)" 
+              />
             )}
 
             {activeMetric === 'fuelPriceVLSFO' && (
-              <Line type="monotone" dataKey="fuelPriceVLSFO" stroke="#a855f7" strokeWidth={2.5} dot={false} name="VLSFO Bunker ($/MT)" />
+              <Line 
+                type="monotone" 
+                dataKey="fuelPriceVLSFO" 
+                stroke="#a855f7" 
+                strokeWidth={2.5} 
+                dot={false} 
+                name="VLSFO Bunker ($/MT)" 
+              />
             )}
           </LineChart>
         </ResponsiveContainer>

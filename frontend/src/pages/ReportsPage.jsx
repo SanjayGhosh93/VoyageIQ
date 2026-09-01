@@ -55,9 +55,9 @@ export const ReportsPage = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="p-6 rounded-3xl bg-gradient-to-r from-navy-900 via-slate-900 to-navy-950 border border-ocean-500/25 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 print:hidden">
+      <div className="p-6 rounded-3xl bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950 border border-sky-500/25 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 print:hidden">
         <div>
-          <div className="flex items-center gap-2 text-xs font-mono font-bold text-ocean-400 uppercase tracking-widest">
+          <div className="flex items-center gap-2 text-xs font-mono font-bold text-sky-400 uppercase tracking-widest">
             <FileSpreadsheet className="w-4 h-4 text-cyan-400" />
             <span>SAIL EXECUTIVE BRIEFING DOSSIER</span>
           </div>
@@ -82,7 +82,7 @@ export const ReportsPage = () => {
           {report && (
             <button
               onClick={handlePrint}
-              className="px-4 py-2 rounded-xl bg-ocean-600 hover:bg-ocean-500 text-white font-bold text-xs font-mono transition-colors shadow-md flex items-center gap-1.5"
+              className="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs font-mono transition-colors shadow-md flex items-center gap-1.5"
             >
               <Printer className="w-4 h-4" />
               <span>Print / Save PDF</span>
@@ -92,12 +92,12 @@ export const ReportsPage = () => {
       </div>
 
       {!report && !loading && (
-        <div className="p-12 text-center glass-panel rounded-3xl space-y-4">
-          <div className="p-4 rounded-full bg-ocean-500/10 border border-ocean-500/20 text-ocean-400 w-fit mx-auto">
+        <div className="p-12 text-center bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-3xl space-y-4 shadow-xl">
+          <div className="p-4 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-600 dark:text-sky-400 w-fit mx-auto">
             <FileSpreadsheet className="w-10 h-10" />
           </div>
-          <h3 className="text-lg font-bold text-white">No Active Report Generated</h3>
-          <p className="text-xs text-slate-400 max-w-md mx-auto">
+          <h3 className="text-lg font-bold text-slate-900 dark:text-white">No Active Report Generated</h3>
+          <p className="text-xs text-slate-600 dark:text-slate-400 max-w-md mx-auto">
             Click the button above to generate a comprehensive, print-ready chartering decision brief for the Ministry of Steel & SAIL review board.
           </p>
         </div>
@@ -109,7 +109,7 @@ export const ReportsPage = () => {
           {/* Official Letterhead */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-6 border-b-2 border-slate-800 gap-4">
             <div>
-              <div className="text-xs font-mono font-bold tracking-widest text-ocean-400 uppercase">
+              <div className="text-xs font-mono font-bold tracking-widest text-sky-400 uppercase">
                 STEEL AUTHORITY OF INDIA LIMITED (SAIL) • MINISTRY OF STEEL
               </div>
               <h2 className="text-xl sm:text-2xl font-extrabold text-white mt-1">
@@ -209,9 +209,9 @@ export const ReportsPage = () => {
           </div>
 
           {/* Section 4: Final Executive Recommendation */}
-          <div className="p-6 rounded-2xl bg-slate-900 border border-ocean-500/30 space-y-3">
+          <div className="p-6 rounded-2xl bg-slate-900 border border-sky-500/30 space-y-3">
             <div className="flex items-center justify-between">
-              <div className="text-xs font-mono font-bold uppercase text-ocean-400">
+              <div className="text-xs font-mono font-bold uppercase text-sky-400">
                 4. Executive Chartering Directive
               </div>
               <span className="text-xs font-mono font-bold text-emerald-400">

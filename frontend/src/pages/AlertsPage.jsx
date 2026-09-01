@@ -65,45 +65,45 @@ export const AlertsPage = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="p-6 rounded-3xl bg-gradient-to-r from-navy-900 via-slate-900 to-navy-950 border border-ocean-500/25 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="p-6 rounded-3xl bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950 border border-sky-500/25 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-xs font-mono font-bold text-rose-400 uppercase tracking-widest">
-            <BellRing className="w-4 h-4 text-rose-400" />
+          <div className="flex items-center gap-2 text-xs font-mono font-bold text-rose-500 dark:text-rose-400 uppercase tracking-widest">
+            <BellRing className="w-4 h-4 text-rose-500 dark:text-rose-400" />
             <span>SAIL MARITIME EARLY WARNING RADAR</span>
           </div>
-          <h1 className="text-2xl font-extrabold text-white tracking-tight mt-1">
+          <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight mt-1">
             Active Strategic Alerts & Disruption Feeds
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
             Real-time triggers for freight rate surges, bunker shocks, draught gating, and cyclone alerts
           </p>
         </div>
 
         <div className="flex items-center gap-2 text-xs font-mono">
-          <span className="px-3 py-1.5 rounded-xl bg-rose-500/20 text-rose-300 border border-rose-500/30 font-bold">
+          <span className="px-3 py-1.5 rounded-xl bg-rose-500/10 text-rose-600 dark:text-rose-300 border border-rose-500/30 font-bold">
             {alerts.filter(a => a.severity === 'CRITICAL' && !a.isAcknowledged).length} Critical
           </span>
-          <span className="px-3 py-1.5 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/30 font-bold">
+          <span className="px-3 py-1.5 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-300 border border-amber-500/30 font-bold">
             {alerts.filter(a => a.severity === 'HIGH' && !a.isAcknowledged).length} High
           </span>
         </div>
       </div>
 
       {/* Filter Toolbar */}
-      <div className="p-4 rounded-2xl glass-panel flex flex-wrap items-center justify-between gap-4">
+      <div className="p-4 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 shadow-xl flex flex-wrap items-center justify-between gap-4">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs font-semibold text-slate-400 flex items-center gap-1 mr-2">
-            <Filter className="w-3.5 h-3.5 text-ocean-400" />
+          <span className="text-xs font-semibold text-slate-600 dark:text-slate-400 flex items-center gap-1 mr-2">
+            <Filter className="w-3.5 h-3.5 text-sky-500 dark:text-sky-400" />
             <span>Category:</span>
           </span>
           {categories.map((c) => (
             <button
               key={c}
               onClick={() => setCategoryFilter(c)}
-              className={`px-3 py-1 rounded-lg text-xs font-mono transition-all ${
+              className={`px-3 py-1 rounded-lg text-xs font-mono transition-all cursor-pointer ${
                 categoryFilter === c
-                  ? 'bg-ocean-500 text-white font-bold shadow-md'
-                  : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
+                  ? 'bg-sky-600 text-white font-bold shadow-md'
+                  : 'bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-300 dark:border-slate-800'
               }`}
             >
               {c}
@@ -112,15 +112,15 @@ export const AlertsPage = () => {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs font-semibold text-slate-400 mr-2">Severity:</span>
+          <span className="text-xs font-semibold text-slate-600 dark:text-slate-400 mr-2">Severity:</span>
           {severities.map((s) => (
             <button
               key={s}
               onClick={() => setSeverityFilter(s)}
-              className={`px-2.5 py-1 rounded-lg text-xs font-mono transition-all ${
+              className={`px-2.5 py-1 rounded-lg text-xs font-mono transition-all cursor-pointer ${
                 severityFilter === s
                   ? 'bg-slate-700 text-white font-bold'
-                  : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
+                  : 'bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-300 dark:border-slate-800'
               }`}
             >
               {s}
@@ -132,7 +132,7 @@ export const AlertsPage = () => {
       {/* Alerts Grid */}
       <div className="space-y-3">
         {filteredAlerts.length === 0 ? (
-          <div className="p-8 text-center glass-panel rounded-2xl text-slate-500 dark:text-slate-400 text-sm">
+          <div className="p-8 text-center bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 shadow-xl rounded-2xl text-slate-500 dark:text-slate-400 text-sm">
             No active alerts matching selected filter criteria.
           </div>
         ) : (
@@ -141,9 +141,9 @@ export const AlertsPage = () => {
               key={a._id || a.title}
               className={`p-5 rounded-3xl border transition-all flex flex-col md:flex-row items-start md:items-center justify-between gap-4 ${
                 a.severity === 'CRITICAL'
-                  ? 'bg-rose-50/90 dark:bg-gradient-to-r dark:from-rose-950/40 dark:via-slate-900 dark:to-navy-950 border-rose-200 dark:border-rose-500/40 shadow-sm'
+                  ? 'bg-rose-50/90 dark:bg-gradient-to-r dark:from-rose-950/40 dark:via-slate-900 dark:to-slate-950 border-rose-200 dark:border-rose-500/40 shadow-sm'
                   : a.severity === 'HIGH'
-                  ? 'bg-amber-50/90 dark:bg-gradient-to-r dark:from-amber-950/40 dark:via-slate-900 dark:to-navy-950 border-amber-200 dark:border-amber-500/40 shadow-sm'
+                  ? 'bg-amber-50/90 dark:bg-gradient-to-r dark:from-amber-950/40 dark:via-slate-900 dark:to-slate-950 border-amber-200 dark:border-amber-500/40 shadow-sm'
                   : 'bg-white dark:bg-slate-900/80 border-slate-200 dark:border-slate-800 shadow-sm'
               } ${a.isAcknowledged ? 'opacity-60' : ''}`}
             >
@@ -182,7 +182,7 @@ export const AlertsPage = () => {
                 {!a.isAcknowledged && (
                   <button
                     onClick={() => handleAcknowledge(a._id)}
-                    className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-transparent text-xs font-mono font-semibold transition-colors"
+                    className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-transparent text-xs font-mono font-semibold transition-colors cursor-pointer"
                   >
                     Acknowledge
                   </button>
@@ -191,7 +191,7 @@ export const AlertsPage = () => {
                 {a.actionableLink && (
                   <Link
                     to={a.actionableLink}
-                    className="px-3.5 py-1.5 rounded-xl bg-ocean-600 hover:bg-ocean-500 text-white text-xs font-mono font-bold transition-colors flex items-center gap-1 shadow-md"
+                    className="px-3.5 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-mono font-bold transition-colors flex items-center gap-1 shadow-md"
                   >
                     <span>Action</span>
                     <ArrowRight className="w-3.5 h-3.5" />

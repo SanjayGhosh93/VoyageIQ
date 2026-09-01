@@ -9,6 +9,15 @@ export const FailureAlertBox = ({
   destination = 'Haldia',
   vesselClass = 'CAPESIZE'
 }) => {
+  // Normalize constraints and warnings to arrays to handle string or object API responses safely
+  const constraintsList = Array.isArray(failedConstraints) 
+    ? failedConstraints 
+    : (failedConstraints ? [failedConstraints] : []);
+
+  const warningsList = Array.isArray(warnings) 
+    ? warnings 
+    : (warnings ? [warnings] : []);
+
   return (
     <div className="p-5 rounded-2xl bg-rose-50/95 dark:bg-gradient-to-b dark:from-rose-950/40 dark:to-slate-900 border border-rose-200 dark:border-rose-500/40 shadow-xl relative overflow-hidden transition-colors">
       {/* Background ambient glow */}
@@ -34,45 +43,49 @@ export const FailureAlertBox = ({
       </p>
 
       {/* Failed Constraints List */}
-      {failedConstraints.length > 0 && (
+      {constraintsList.length > 0 && (
         <div className="space-y-2 mb-4">
           <div className="text-[11px] font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400 font-mono">
-            Failed Operational Constraints ({failedConstraints.length})
+            Failed Operational Constraints ({constraintsList.length})
           </div>
-          {failedConstraints.map((fail, i) => (
+          {constraintsList.map((fail, i) => (
             <div
               key={i}
               className="flex items-start gap-2.5 p-3 rounded-xl bg-white dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/30 text-xs text-rose-900 dark:text-rose-200 shadow-sm"
             >
               <XCircle className="w-4 h-4 text-rose-500 dark:text-rose-400 shrink-0 mt-0.5" />
-              <span className="font-medium leading-snug">{fail}</span>
+              <span className="font-medium leading-snug">
+                {typeof fail === 'object' ? (fail.message || fail.reason || JSON.stringify(fail)) : fail}
+              </span>
             </div>
           ))}
         </div>
       )}
 
       {/* Secondary Warnings */}
-      {warnings.length > 0 && (
+      {warningsList.length > 0 && (
         <div className="space-y-1.5 mb-4">
           <div className="text-[11px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 font-mono">
-            Operational Advisories ({warnings.length})
+            Operational Advisories ({warningsList.length})
           </div>
-          {warnings.map((warn, i) => (
+          {warningsList.map((warn, i) => (
             <div
               key={i}
               className="flex items-start gap-2 p-2 rounded-lg bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 text-xs text-amber-900 dark:text-amber-200 shadow-sm"
             >
               <ShieldAlert className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400 shrink-0 mt-0.5" />
-              <span className="leading-snug">{warn}</span>
+              <span className="leading-snug">
+                {typeof warn === 'object' ? (warn.message || warn.warning || JSON.stringify(warn)) : warn}
+              </span>
             </div>
           ))}
         </div>
       )}
 
-      {/* Prompt to alternatives */}
+      {/* Alternative Recommendations Lead-In */}
       <div className="pt-3 border-t border-rose-200 dark:border-slate-800 flex items-center justify-between text-xs">
-        <div className="flex items-center gap-1.5 text-ocean-600 dark:text-ocean-400 font-semibold font-mono">
-          <ArrowDownCircle className="w-4 h-4 text-ocean-500 dark:text-ocean-400 animate-bounce" />
+        <div className="flex items-center gap-1.5 text-sky-600 dark:text-sky-400 font-semibold font-mono">
+          <ArrowDownCircle className="w-4 h-4 text-sky-500 dark:text-sky-400 animate-bounce" />
           <span>AI DECISION ENGINE: SMART ALTERNATIVES GENERATED BELOW</span>
         </div>
       </div>

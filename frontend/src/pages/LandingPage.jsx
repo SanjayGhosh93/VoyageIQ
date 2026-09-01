@@ -226,8 +226,6 @@ export const LandingPage = () => {
         </div>
       </section>
 
-
-
       {/* 3 Pillar Value Proposition */}
       <section className="py-16 px-6 bg-white/50 dark:bg-navy-900/50 border-b border-slate-200 dark:border-slate-800/80">
         <div className="max-w-7xl mx-auto space-y-12">

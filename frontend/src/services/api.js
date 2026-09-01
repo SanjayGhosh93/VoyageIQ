@@ -119,13 +119,18 @@ export const alertService = {
   }
 };
 
+// --- FIXED MARKET SERVICE ---
 export const marketService = {
   getOverview: async () => {
-    const res = await api.get('/market');
+    const res = await api.get('/market/overview');
     return res.data;
   },
   getHistory: async (params) => {
     const res = await api.get('/market/history', { params });
+    return res.data;
+  },
+  getCargoHistory: async () => {
+    const res = await api.get('/market/cargo');
     return res.data;
   }
 };
@@ -166,6 +171,17 @@ export const realtimeService = {
   },
   getLiveVessels: async () => {
     const res = await api.get('/realtime/vessels');
+    return res.data;
+  }
+};
+// frontend/src/services/api.js (Update to add risk fetching)
+export const riskCenterPage = {
+  calculateRisk: async (params) => {
+    const res = await api.post('/risk/calculate', params);
+    return res.data;
+  },
+  getRiskScore: async (params) => {
+    const res = await api.get('/risk/score', { params });
     return res.data;
   }
 };

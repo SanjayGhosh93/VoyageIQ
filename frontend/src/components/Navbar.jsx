@@ -1,11 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
+// frontend/src/components/Navbar.jsx
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   Search, 
   Bell, 
-  PlayCircle, 
   Presentation, 
-  User, 
   ChevronDown, 
   LogOut, 
   ShieldCheck, 
@@ -95,17 +94,18 @@ export const Navbar = ({ onOpenDemo }) => {
 
   const roles = ['Logistics Planner', 'Commercial Charterer', 'Port Operations Manager', 'Executive'];
 
-  // Filter items based on user typing
-  const filteredResults = searchQuery.trim()
-    ? SEARCH_INDEX.filter((item) => {
-        const query = searchQuery.toLowerCase();
-        return (
-          item.title.toLowerCase().includes(query) ||
-          item.subtitle.toLowerCase().includes(query) ||
-          item.category.toLowerCase().includes(query)
-        );
-      }).slice(0, 8)
-    : [];
+  // Memoize filtered results for high search performance
+  const filteredResults = useMemo(() => {
+    if (!searchQuery.trim()) return [];
+    const query = searchQuery.toLowerCase();
+    return SEARCH_INDEX.filter((item) => {
+      return (
+        item.title.toLowerCase().includes(query) ||
+        item.subtitle.toLowerCase().includes(query) ||
+        item.category.toLowerCase().includes(query)
+      );
+    }).slice(0, 8);
+  }, [searchQuery]);
 
   // Close search popover on outside click
   useEffect(() => {
@@ -133,7 +133,7 @@ export const Navbar = ({ onOpenDemo }) => {
   };
 
   return (
-    <header className="h-16 px-6 border-b border-slate-200/60 dark:border-slate-800/60 bg-white/70 dark:bg-navy-950/70 backdrop-blur-xl flex items-center justify-between gap-4 sticky top-0 z-40 transition-colors shadow-sm">
+    <header className="h-16 px-6 border-b border-slate-200/60 dark:border-slate-800/60 bg-white/70 dark:bg-slate-950/70 backdrop-blur-xl flex items-center justify-between gap-4 sticky top-0 z-40 transition-colors shadow-sm">
       {/* Left: Global Interactive Search Bar */}
       <div className="flex-1 max-w-xl relative" ref={searchRef}>
         <div className="relative">
@@ -148,7 +148,7 @@ export const Navbar = ({ onOpenDemo }) => {
               setIsSearchOpen(true);
             }}
             onKeyDown={handleKeyDown}
-            className="w-full pl-10 pr-9 py-2 text-xs rounded-xl bg-slate-100/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-700/80 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-ocean-500 transition-all font-sans"
+            className="w-full pl-10 pr-9 py-2 text-xs rounded-xl bg-slate-100/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-700/80 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all font-sans"
           />
           {searchQuery && (
             <button
@@ -179,14 +179,14 @@ export const Navbar = ({ onOpenDemo }) => {
                         <button
                           key={idx}
                           onClick={() => handleSelectResult(item)}
-                          className="w-full px-3 py-2 rounded-xl text-left flex items-center justify-between hover:bg-ocean-500/10 dark:hover:bg-ocean-500/20 text-slate-800 dark:text-slate-200 group transition-all"
+                          className="w-full px-3 py-2 rounded-xl text-left flex items-center justify-between hover:bg-sky-500/10 dark:hover:bg-sky-500/20 text-slate-800 dark:text-slate-200 group transition-all"
                         >
                           <div className="flex items-center gap-2.5">
-                            <div className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-ocean-600 dark:text-cyan-400 group-hover:bg-ocean-500 group-hover:text-white transition-colors">
+                            <div className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-sky-600 dark:text-cyan-400 group-hover:bg-sky-500 group-hover:text-white transition-colors shrink-0">
                               <Icon className="w-3.5 h-3.5" />
                             </div>
                             <div>
-                              <div className="font-bold text-slate-900 dark:text-white group-hover:text-ocean-600 dark:group-hover:text-cyan-300">
+                              <div className="font-bold text-slate-900 dark:text-white group-hover:text-sky-600 dark:group-hover:text-cyan-300">
                                 {item.title}
                               </div>
                               <div className="text-[10px] text-slate-500 dark:text-slate-400">
@@ -194,11 +194,11 @@ export const Navbar = ({ onOpenDemo }) => {
                               </div>
                             </div>
                           </div>
-                          <div className="flex items-center gap-1.5">
+                          <div className="flex items-center gap-1.5 shrink-0">
                             <span className="px-1.5 py-0.5 rounded text-[9px] font-mono bg-slate-100 dark:bg-slate-800 text-slate-500 border border-slate-200 dark:border-slate-700">
                               {item.category}
                             </span>
-                            <ArrowUpRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-ocean-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <ArrowUpRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-sky-500 opacity-0 group-hover:opacity-100 transition-opacity" />
                           </div>
                         </button>
                       );
@@ -223,7 +223,7 @@ export const Navbar = ({ onOpenDemo }) => {
                       onClick={() => handleSelectResult(item)}
                       className="p-2 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center gap-2"
                     >
-                      <item.icon className="w-3.5 h-3.5 text-ocean-500 shrink-0" />
+                      <item.icon className="w-3.5 h-3.5 text-sky-500 shrink-0" />
                       <span className="truncate font-medium">{item.title}</span>
                     </button>
                   ))}
@@ -242,26 +242,26 @@ export const Navbar = ({ onOpenDemo }) => {
         {/* Home Portal Button */}
         <Link
           to="/"
-          className="hidden md:flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 bg-slate-100/80 dark:bg-slate-900/80 hover:bg-slate-200/80 dark:hover:bg-slate-800 border border-slate-300/80 dark:border-slate-700/80 rounded-xl transition-all shadow-sm"
+          className="hidden md:flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 bg-slate-100/80 dark:bg-slate-950/80 hover:bg-slate-200/80 dark:hover:bg-slate-900 border border-slate-300/80 dark:border-slate-800 rounded-xl transition-all shadow-sm"
           title="Back to Home / Landing Page"
         >
-          <Home className="w-3.5 h-3.5 text-ocean-600 dark:text-cyan-400" />
+          <Home className="w-3.5 h-3.5 text-sky-600 dark:text-cyan-400" />
           <span>Home</span>
         </Link>
 
         {/* SIH Judge Presentation Mode Button */}
         <Link
           to="/presentation"
-          className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-ocean-600 dark:text-ocean-300 bg-ocean-500/10 dark:bg-ocean-950/60 hover:bg-ocean-500/20 dark:hover:bg-ocean-900/80 border border-ocean-500/30 rounded-xl transition-all shadow-sm"
+          className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-sky-600 dark:text-sky-300 bg-sky-500/10 dark:bg-sky-950/60 hover:bg-sky-500/20 dark:hover:bg-sky-900/80 border border-sky-500/30 rounded-xl transition-all shadow-sm"
         >
-          <Presentation className="w-3.5 h-3.5 text-ocean-600 dark:text-ocean-400" />
+          <Presentation className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" />
           <span>Judge Presentation</span>
         </Link>
 
         {/* 1-Click RUN SIH DEMO Button */}
         <button
           onClick={onOpenDemo}
-          className="flex items-center gap-2 px-3.5 py-1.5 text-xs font-bold text-slate-950 bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 hover:from-amber-300 hover:to-amber-400 rounded-xl shadow-lg shadow-amber-500/20 transition-all transform hover:scale-[1.02] active:scale-[0.98] border border-yellow-200"
+          className="flex items-center gap-2 px-3.5 py-1.5 text-xs font-bold text-slate-950 bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 hover:from-amber-300 hover:to-amber-400 rounded-xl shadow-lg shadow-amber-500/20 transition-all transform hover:scale-[1.02] active:scale-[0.98] border border-yellow-200 shrink-0"
         >
           <Sparkles className="w-3.5 h-3.5" />
           <span className="tracking-wide uppercase font-mono">RUN SIH DEMO</span>
@@ -275,15 +275,15 @@ export const Navbar = ({ onOpenDemo }) => {
             title="Early Warnings"
           >
             <Bell className="w-4 h-4" />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white dark:ring-navy-900 animate-ping" />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white dark:ring-navy-900" />
+            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white dark:ring-slate-950 animate-ping" />
+            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white dark:ring-slate-950" />
           </button>
 
           {showNotifications && (
             <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-3 z-50 animate-in fade-in slide-in-from-top-2">
               <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-700 dark:text-slate-300">
                 <span>ACTIVE ALERTS</span>
-                <Link to="/alerts" onClick={() => setShowNotifications(false)} className="text-ocean-600 dark:text-ocean-400 hover:underline">
+                <Link to="/alerts" onClick={() => setShowNotifications(false)} className="text-sky-600 dark:text-sky-400 hover:underline">
                   View All (5)
                 </Link>
               </div>
@@ -311,16 +311,16 @@ export const Navbar = ({ onOpenDemo }) => {
             onClick={() => setShowRoleMenu(!showRoleMenu)}
             className="flex items-center gap-2.5 p-1.5 pr-3 rounded-xl bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-colors"
           >
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-ocean-600 to-cyan-400 flex items-center justify-center text-white font-bold text-xs shadow-md">
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-sky-600 to-cyan-400 flex items-center justify-center text-white font-bold text-xs shadow-md shrink-0">
               {user?.name?.charAt(0) || 'U'}
             </div>
             <div className="text-left hidden md:block">
               <div className="text-xs font-semibold text-slate-800 dark:text-slate-200 leading-tight">{user?.name || 'SAIL Officer'}</div>
-              <div className="text-[10px] text-ocean-600 dark:text-ocean-400 font-mono leading-tight flex items-center gap-1">
+              <div className="text-[10px] text-sky-600 dark:text-sky-400 font-mono leading-tight flex items-center gap-1">
                 <span>{user?.role || 'Logistics Manager'}</span>
               </div>
             </div>
-            <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+            <ChevronDown className="w-3.5 h-3.5 text-slate-400 shrink-0" />
           </button>
 
           {showRoleMenu && (
@@ -328,7 +328,7 @@ export const Navbar = ({ onOpenDemo }) => {
               <div className="p-2.5 border-b border-slate-200 dark:border-slate-800 mb-1">
                 <div className="font-bold text-slate-800 dark:text-slate-200">{user?.name}</div>
                 <div className="text-[11px] text-slate-500 dark:text-slate-400">{user?.email}</div>
-                <div className="text-[10px] text-ocean-600 dark:text-ocean-400 mt-1 font-mono">{user?.organization}</div>
+                <div className="text-[10px] text-sky-600 dark:text-sky-400 mt-1 font-mono">{user?.organization}</div>
               </div>
 
               <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500">
@@ -342,11 +342,11 @@ export const Navbar = ({ onOpenDemo }) => {
                     setShowRoleMenu(false);
                   }}
                   className={`w-full text-left px-2.5 py-1.5 rounded-lg flex items-center justify-between transition-colors ${
-                    user?.role === r ? 'bg-ocean-500/20 text-ocean-600 dark:text-ocean-300 font-semibold' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
+                    user?.role === r ? 'bg-sky-500/20 text-sky-600 dark:text-sky-300 font-semibold' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
                   }`}
                 >
                   <span>{r}</span>
-                  {user?.role === r && <ShieldCheck className="w-3.5 h-3.5 text-ocean-500 dark:text-ocean-400" />}
+                  {user?.role === r && <ShieldCheck className="w-3.5 h-3.5 text-sky-500 dark:text-sky-400" />}
                 </button>
               ))}
 

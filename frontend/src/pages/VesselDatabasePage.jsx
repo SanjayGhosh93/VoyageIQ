@@ -1,9 +1,8 @@
 // frontend/src/pages/VesselDatabasePage.jsx
 import React, { useState, useEffect } from 'react';
-import { Ship, Database, Search, ShieldCheck, MapPin, Fuel, Clock } from 'lucide-react';
+import { Ship } from 'lucide-react';
 import { LoadingState } from '../components/LoadingState';
 import { vesselService } from '../services/api';
-import { formatCurrency } from '../utils/formatters';
 
 export const VesselDatabasePage = () => {
   const [vessels, setVessels] = useState([]);
@@ -43,28 +42,28 @@ export const VesselDatabasePage = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="p-6 rounded-3xl bg-gradient-to-r from-navy-900 via-slate-900 to-navy-950 border border-ocean-500/25 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="p-6 rounded-3xl bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950 border border-sky-500/25 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-xs font-mono font-bold text-ocean-400 uppercase tracking-widest">
-            <Ship className="w-4 h-4 text-cyan-400" />
+          <div className="flex items-center gap-2 text-xs font-mono font-bold text-sky-600 dark:text-sky-400 uppercase tracking-widest">
+            <Ship className="w-4 h-4 text-cyan-500 dark:text-cyan-400" />
             <span>BULK CARRIER FLEET INTELLIGENCE</span>
           </div>
-          <h1 className="text-2xl font-extrabold text-white tracking-tight mt-1">
+          <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight mt-1">
             Vessel Classes & Live Fleet Telemetry
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
             Real-time AIS positioning, speed, heading, loaded draft profiles, and daily hire benchmarks
           </p>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs font-mono text-emerald-400 font-bold">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs font-mono text-emerald-700 dark:text-emerald-400 font-bold">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-ping" />
             <span>LIVE AIS STREAMING</span>
           </div>
           <button
             onClick={fetchVessels}
-            className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-mono text-cyan-300 font-semibold border border-slate-700 transition-colors"
+            className="px-3 py-1.5 rounded-xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-xs font-mono text-cyan-700 dark:text-cyan-300 font-semibold border border-slate-300 dark:border-slate-700 transition-colors"
           >
             ↻ Refresh AIS
           </button>
@@ -73,43 +72,43 @@ export const VesselDatabasePage = () => {
 
       {/* 4 Standard Bulk Carrier Classes */}
       <div className="space-y-3">
-        <div className="text-xs font-mono font-bold uppercase tracking-wider text-slate-400">
+        <div className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
           Standard Vessel Class Envelopes (SIH Benchmark Standards)
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {classCards.map((c) => (
-            <div key={c.name} className="p-5 rounded-3xl glass-panel space-y-3">
+            <div key={c.name} className="p-5 rounded-3xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 shadow-xl space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-extrabold text-white font-mono">{c.name}</span>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-ocean-500/10 text-ocean-300 border border-ocean-500/20">
+                <span className="text-sm font-extrabold text-slate-900 dark:text-white font-mono">{c.name}</span>
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-sky-50 dark:bg-sky-500/10 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-500/20">
                   Standard
                 </span>
               </div>
 
               <div className="space-y-1 text-xs font-mono">
-                <div className="flex justify-between text-slate-400">
+                <div className="flex justify-between text-slate-500 dark:text-slate-400">
                   <span>DWT Envelope:</span>
-                  <span className="text-slate-200 font-bold">{c.dwt}</span>
+                  <span className="text-slate-800 dark:text-slate-200 font-bold">{c.dwt}</span>
                 </div>
-                <div className="flex justify-between text-slate-400">
+                <div className="flex justify-between text-slate-500 dark:text-slate-400">
                   <span>Loaded Draft:</span>
-                  <span className="text-cyan-400 font-bold">{c.draft}</span>
+                  <span className="text-cyan-600 dark:text-cyan-400 font-bold">{c.draft}</span>
                 </div>
-                <div className="flex justify-between text-slate-400">
+                <div className="flex justify-between text-slate-500 dark:text-slate-400">
                   <span>Length Overall:</span>
-                  <span className="text-slate-200 font-bold">{c.loa}</span>
+                  <span className="text-slate-800 dark:text-slate-200 font-bold">{c.loa}</span>
                 </div>
-                <div className="flex justify-between text-slate-400">
+                <div className="flex justify-between text-slate-500 dark:text-slate-400">
                   <span>Beam Width:</span>
-                  <span className="text-slate-200 font-bold">{c.beam}</span>
+                  <span className="text-slate-800 dark:text-slate-200 font-bold">{c.beam}</span>
                 </div>
-                <div className="flex justify-between text-slate-400">
+                <div className="flex justify-between text-slate-500 dark:text-slate-400">
                   <span>Fuel Burn Sea:</span>
-                  <span className="text-purple-300 font-bold">{c.fuel}</span>
+                  <span className="text-purple-600 dark:text-purple-300 font-bold">{c.fuel}</span>
                 </div>
-                <div className="flex justify-between text-slate-400">
+                <div className="flex justify-between text-slate-500 dark:text-slate-400">
                   <span>Daily Hire:</span>
-                  <span className="text-amber-400 font-bold">{c.hire}</span>
+                  <span className="text-amber-600 dark:text-amber-400 font-bold">{c.hire}</span>
                 </div>
               </div>
             </div>
@@ -118,17 +117,17 @@ export const VesselDatabasePage = () => {
       </div>
 
       {/* Active Fleet List */}
-      <div className="p-6 rounded-3xl glass-panel space-y-4">
-        <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+      <div className="p-6 rounded-3xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
+        <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
           <div className="flex items-center gap-2">
-            <h3 className="text-sm font-bold text-white uppercase font-mono tracking-wider">
+            <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase font-mono tracking-wider">
               Live AIS Tracked Bulk Carrier Fleet
             </h3>
-            <span className="px-2 py-0.5 rounded bg-ocean-500/20 text-cyan-300 text-[10px] font-mono font-bold border border-ocean-500/30">
+            <span className="px-2 py-0.5 rounded bg-sky-50 dark:bg-sky-500/20 text-sky-700 dark:text-cyan-300 text-[10px] font-mono font-bold border border-sky-200 dark:border-sky-500/30">
               Synced: {lastSync.toLocaleTimeString()}
             </span>
           </div>
-          <span className="text-xs font-mono text-slate-400">
+          <span className="text-xs font-mono text-slate-500 dark:text-slate-400">
             {vessels.length} Active Bulk Carriers
           </span>
         </div>
@@ -138,58 +137,58 @@ export const VesselDatabasePage = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {vessels.map((v) => (
-              <div key={v.id || v.imo} className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3">
+              <div key={v.id || v.imo} className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 space-y-3 shadow-sm">
                 <div className="flex items-start justify-between">
                   <div>
-                    <h4 className="text-sm font-bold text-white flex items-center gap-2">
+                    <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
                       <span>{v.name}</span>
-                      <span className="text-[10px] px-2 py-0.2 rounded font-mono bg-slate-800 text-cyan-400 border border-slate-700">
+                      <span className="text-[10px] px-2 py-0.2 rounded font-mono bg-slate-200 dark:bg-slate-800 text-cyan-600 dark:text-cyan-400 border border-slate-300 dark:border-slate-700">
                         IMO: {v.imo || v.imoNumber}
                       </span>
                     </h4>
-                    <span className="text-xs text-slate-400 font-mono mt-0.5 block">
+                    <span className="text-xs text-slate-500 dark:text-slate-400 font-mono mt-0.5 block">
                       {v.cargo || `${v.vesselClass} Bulk Carrier`}
                     </span>
                   </div>
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30">
                     {v.status || 'UNDERWAY'}
                   </span>
                 </div>
 
                 {/* Live GPS Telemetry Bar */}
-                <div className="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800/80 grid grid-cols-3 gap-2 text-[11px] font-mono text-slate-300">
+                <div className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800/80 grid grid-cols-3 gap-2 text-[11px] font-mono text-slate-700 dark:text-slate-300">
                   <div>
-                    <span className="text-[9px] text-slate-500 uppercase block">Live GPS</span>
-                    <span className="text-cyan-300 font-bold">
+                    <span className="text-[9px] text-slate-400 dark:text-slate-500 uppercase block">Live GPS</span>
+                    <span className="text-cyan-600 dark:text-cyan-300 font-bold">
                       {v.currentLat ? `${v.currentLat.toFixed(2)}°N, ${v.currentLon?.toFixed(2)}°E` : '18.4°N, 88.2°E'}
                     </span>
                   </div>
                   <div>
-                    <span className="text-[9px] text-slate-500 uppercase block">Speed / Course</span>
-                    <span className="text-emerald-400 font-bold">
+                    <span className="text-[9px] text-slate-400 dark:text-slate-500 uppercase block">Speed / Course</span>
+                    <span className="text-emerald-600 dark:text-emerald-400 font-bold">
                       {v.speedKnots || 13.2} Kts • {v.heading || 290}°
                     </span>
                   </div>
                   <div>
-                    <span className="text-[9px] text-slate-500 uppercase block">Destination ETA</span>
-                    <span className="text-amber-300 font-bold truncate block">
+                    <span className="text-[9px] text-slate-400 dark:text-slate-500 uppercase block">Destination ETA</span>
+                    <span className="text-amber-600 dark:text-amber-300 font-bold truncate block">
                       {v.destination || 'Paradip Port'}
                     </span>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-2 text-xs font-mono pt-1 text-slate-400">
+                <div className="grid grid-cols-3 gap-2 text-xs font-mono pt-1 text-slate-500 dark:text-slate-400">
                   <div>
-                    <span className="text-slate-500 block text-[9px] uppercase">Class / DWT</span>
-                    <span className="text-slate-200">{v.vesselClass} ({v.dwt?.toLocaleString()} MT)</span>
+                    <span className="text-slate-400 dark:text-slate-500 block text-[9px] uppercase">Class / DWT</span>
+                    <span className="text-slate-800 dark:text-slate-200">{v.vesselClass} ({v.dwt?.toLocaleString()} MT)</span>
                   </div>
                   <div>
-                    <span className="text-slate-500 block text-[9px] uppercase">Draft / LOA</span>
-                    <span className="text-slate-200">{v.draft}m / {v.loa}m</span>
+                    <span className="text-slate-400 dark:text-slate-500 block text-[9px] uppercase">Draft / LOA</span>
+                    <span className="text-slate-800 dark:text-slate-200">{v.draft}m / {v.loa}m</span>
                   </div>
                   <div>
-                    <span className="text-slate-500 block text-[9px] uppercase">Demurrage Risk</span>
-                    <span className="text-emerald-400 font-bold">{v.demurrageRisk || 'LOW RISK'}</span>
+                    <span className="text-slate-400 dark:text-slate-500 block text-[9px] uppercase">Demurrage Risk</span>
+                    <span className="text-emerald-600 dark:text-emerald-400 font-bold">{v.demurrageRisk || 'LOW RISK'}</span>
                   </div>
                 </div>
               </div>

@@ -2,25 +2,18 @@
 import React from 'react';
 import { 
   CheckCircle2, 
-  HelpCircle, 
-  ArrowRight, 
-  Sparkles, 
-  ShieldCheck, 
-  Anchor, 
-  TrendingUp, 
-  DollarSign, 
-  Award 
+  Sparkles 
 } from 'lucide-react';
 
 export const WhyDecisionSection = ({ recommendation }) => {
   if (!recommendation) return null;
 
   return (
-    <div className="p-6 rounded-3xl bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:via-navy-900 dark:to-navy-950 border border-slate-200 dark:border-ocean-500/30 shadow-xl space-y-6 transition-colors">
+    <div className="p-6 rounded-3xl bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 border border-slate-200 dark:border-sky-500/30 shadow-xl space-y-6 transition-colors">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200 dark:border-slate-800">
         <div>
-          <div className="flex items-center gap-2 text-xs font-mono font-bold text-ocean-600 dark:text-ocean-400 uppercase tracking-widest">
+          <div className="flex items-center gap-2 text-xs font-mono font-bold text-sky-600 dark:text-sky-400 uppercase tracking-widest">
             <Sparkles className="w-4 h-4 text-amber-500 dark:text-amber-400" />
             <span>EXPLAINABLE AI REASONING (XAI)</span>
           </div>
@@ -30,7 +23,7 @@ export const WhyDecisionSection = ({ recommendation }) => {
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="px-3 py-1 rounded-full bg-ocean-50 dark:bg-ocean-500/10 border border-ocean-200 dark:border-ocean-500/30 text-ocean-700 dark:text-ocean-300 text-xs font-mono font-bold">
+          <div className="px-3 py-1 rounded-full bg-sky-50 dark:bg-sky-500/10 border border-sky-200 dark:border-sky-500/30 text-sky-700 dark:text-sky-300 text-xs font-mono font-bold">
             Confidence: {Math.round((recommendation.confidenceScore || 0.94) * 100)}%
           </div>
         </div>
@@ -80,14 +73,14 @@ export const WhyDecisionSection = ({ recommendation }) => {
 
       {/* Action Plan */}
       {recommendation.actionSteps && (
-        <div className="p-4 rounded-2xl bg-ocean-50 dark:bg-ocean-950/40 border border-ocean-200 dark:border-ocean-500/20">
-          <div className="text-xs font-bold text-ocean-700 dark:text-ocean-300 uppercase font-mono tracking-wider mb-2">
+        <div className="p-4 rounded-2xl bg-sky-50 dark:bg-sky-950/40 border border-sky-200 dark:border-sky-500/20">
+          <div className="text-xs font-bold text-sky-700 dark:text-sky-300 uppercase font-mono tracking-wider mb-2">
             Recommended Action Plan
           </div>
           <div className="space-y-2">
             {recommendation.actionSteps.map((step, idx) => (
               <div key={idx} className="flex items-start gap-2.5 text-xs text-slate-700 dark:text-slate-300">
-                <span className="w-5 h-5 rounded-full bg-ocean-600 text-white font-mono text-[10px] flex items-center justify-center font-bold shrink-0">
+                <span className="w-5 h-5 rounded-full bg-sky-600 text-white font-mono text-[10px] flex items-center justify-center font-bold shrink-0">
                   {idx + 1}
                 </span>
                 <span className="leading-snug">{step}</span>

@@ -60,16 +60,16 @@ export const ForecastPage = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="p-6 rounded-3xl bg-gradient-to-r from-navy-900 via-slate-900 to-navy-950 border border-ocean-500/25 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="p-6 rounded-3xl bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950 border border-sky-500/25 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-xs font-mono font-bold text-ocean-400 uppercase tracking-widest">
+          <div className="flex items-center gap-2 text-xs font-mono font-bold text-sky-400 uppercase tracking-widest">
             <TrendingUp className="w-4 h-4 text-cyan-400" />
             <span>SAIL FREIGHT INTELLIGENCE ENGINE</span>
           </div>
-          <h1 className="text-2xl font-extrabold text-white tracking-tight mt-1">
+          <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight mt-1">
             Predictive Freight Forecasting & Time Series
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
             Pure JavaScript EMA20 / EMA50 algorithmic regression & horizon trajectory forecasting
           </p>
         </div>
@@ -80,79 +80,79 @@ export const ForecastPage = () => {
       </div>
 
       {/* Inputs Form Bar */}
-      <form onSubmit={handleRunForecast} className="p-6 rounded-3xl glass-panel space-y-4">
-        <div className="text-xs font-mono font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
-          <Sliders className="w-4 h-4 text-ocean-400" />
+      <form onSubmit={handleRunForecast} className="p-6 rounded-3xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
+        <div className="text-xs font-mono font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 flex items-center gap-2">
+          <Sliders className="w-4 h-4 text-sky-500 dark:text-sky-400" />
           <span>Forecast Parameters & Horizon Configuration</span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
           {/* Origin */}
           <div>
-            <label className="text-[11px] font-semibold text-slate-300 block mb-1">Loading Origin</label>
+            <label className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 block mb-1">Loading Origin</label>
             <select
               value={form.origin}
               onChange={(e) => setForm({ ...form, origin: e.target.value })}
-              className="w-full glass-input rounded-xl px-3 py-2 text-xs text-white"
+              className="w-full rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:border-cyan-500"
             >
               {ORIGIN_PORTS.map((p) => (
-                <option key={p.value} value={p.value} className="bg-slate-900">{p.label}</option>
+                <option key={p.value} value={p.value} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">{p.label}</option>
               ))}
             </select>
           </div>
 
           {/* Destination */}
           <div>
-            <label className="text-[11px] font-semibold text-slate-300 block mb-1">Discharge Port</label>
+            <label className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 block mb-1">Discharge Port</label>
             <select
               value={form.destination}
               onChange={(e) => setForm({ ...form, destination: e.target.value })}
-              className="w-full glass-input rounded-xl px-3 py-2 text-xs text-white"
+              className="w-full rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:border-cyan-500"
             >
               {DESTINATION_PORTS.map((p) => (
-                <option key={p.value} value={p.value} className="bg-slate-900">{p.label}</option>
+                <option key={p.value} value={p.value} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">{p.label}</option>
               ))}
             </select>
           </div>
 
           {/* Vessel Class */}
           <div>
-            <label className="text-[11px] font-semibold text-slate-300 block mb-1">Vessel Class</label>
+            <label className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 block mb-1">Vessel Class</label>
             <select
               value={form.vesselClass}
               onChange={(e) => setForm({ ...form, vesselClass: e.target.value })}
-              className="w-full glass-input rounded-xl px-3 py-2 text-xs text-white"
+              className="w-full rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:border-cyan-500"
             >
               {VESSEL_CLASSES.map((v) => (
-                <option key={v.value} value={v.value} className="bg-slate-900">{v.label}</option>
+                <option key={v.value} value={v.value} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">{v.label}</option>
               ))}
             </select>
           </div>
 
           {/* Cargo Type */}
           <div>
-            <label className="text-[11px] font-semibold text-slate-300 block mb-1">Cargo Type</label>
+            <label className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 block mb-1">Cargo Type</label>
             <select
               value={form.cargoType}
               onChange={(e) => setForm({ ...form, cargoType: e.target.value })}
-              className="w-full glass-input rounded-xl px-3 py-2 text-xs text-white"
+              className="w-full rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:border-cyan-500"
             >
               {CARGO_TYPES.map((c) => (
-                <option key={c} value={c} className="bg-slate-900">{c}</option>
+                <option key={c} value={c} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">{c}</option>
               ))}
             </select>
           </div>
 
           {/* Horizon Selection */}
           <div>
-            <label className="text-[11px] font-semibold text-slate-300 block mb-1">Forecast Horizon</label>
+            <label className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 block mb-1">Forecast Horizon</label>
             <select
               value={form.horizonDays}
               onChange={(e) => setForm({ ...form, horizonDays: Number(e.target.value) })}
-              className="w-full glass-input rounded-xl px-3 py-2 text-xs text-amber-400 font-bold"
+              className="w-full rounded-xl px-3 py-2 text-xs text-amber-600 dark:text-amber-400 font-bold bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:border-cyan-500"
             >
               {HORIZON_OPTIONS.map((h) => (
-                <option key={h.value} value={h.value} className="bg-slate-900">{h.label}</option>
+                <option key={h.value} value={h.value} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">{h.label}</option>
               ))}
             </select>
           </div>
@@ -162,7 +162,7 @@ export const ForecastPage = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 rounded-xl bg-gradient-to-r from-ocean-500 to-cyan-500 hover:from-ocean-400 hover:to-cyan-400 text-slate-950 font-extrabold text-xs font-mono uppercase tracking-wider transition-all shadow-md shadow-ocean-500/20 flex items-center justify-center gap-1.5"
+              className="w-full py-2.5 rounded-xl bg-gradient-to-r from-sky-600 to-cyan-500 hover:from-sky-500 hover:to-cyan-400 text-white font-extrabold text-xs font-mono uppercase tracking-wider transition-all shadow-md shadow-sky-500/20 flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
             >
               <Sparkles className="w-3.5 h-3.5" />
               <span>Forecast</span>
@@ -206,22 +206,22 @@ export const ForecastPage = () => {
           </div>
 
           {/* Interactive Recharts Forecast Chart */}
-          <div className="p-6 rounded-3xl glass-panel space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-800">
+          <div className="p-6 rounded-3xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200 dark:border-slate-800">
               <div>
-                <h3 className="text-base font-extrabold text-white">
+                <h3 className="text-base font-extrabold text-slate-900 dark:text-white">
                   Trajectory & Confidence Envelope ({form.origin} → {form.destination})
                 </h3>
-                <p className="text-xs text-slate-400 mt-0.5">
+                <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
                   Showing 30 days history + {form.horizonDays} days projected forward with 95% confidence bands
                 </p>
               </div>
 
               <div className="flex items-center gap-2 text-xs font-mono">
-                <span className="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-300 border border-emerald-500/30">
+                <span className="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">
                   EMA 20: ${forecastResult?.ema20}
                 </span>
-                <span className="px-2.5 py-1 rounded-lg bg-purple-500/10 text-purple-300 border border-purple-500/30">
+                <span className="px-2.5 py-1 rounded-lg bg-purple-500/10 text-purple-700 dark:text-purple-300 border border-purple-500/30">
                   EMA 50: ${forecastResult?.ema50}
                 </span>
               </div>
@@ -235,7 +235,7 @@ export const ForecastPage = () => {
           </div>
 
           {/* Strategic Decision & Regime Logic Card */}
-          <div className="p-6 rounded-3xl bg-gradient-to-r from-slate-900 via-navy-900 to-navy-950 border border-ocean-500/30 shadow-xl space-y-4">
+          <div className="p-6 rounded-3xl bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950 border border-sky-500/30 shadow-xl space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-slate-800">
               <div className="flex items-center gap-2">
                 <ShieldCheck className="w-5 h-5 text-emerald-400" />

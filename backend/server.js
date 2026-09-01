@@ -7,6 +7,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const { connectDB } = require('./config/db');
+const { connectMySQL } = require('./config/mysql');
 const { notFound, errorHandler } = require('./middleware/errorHandler');
 
 // Route imports
@@ -36,8 +37,9 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Connect Database (with safe fallback if Mongo daemon is not running)
+// Connect Databases (with resilient fallbacks)
 connectDB();
+connectMySQL();
 
 // API Health Check
 app.get('/api/health', (req, res) => {

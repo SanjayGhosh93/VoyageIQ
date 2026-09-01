@@ -1,11 +1,10 @@
 // frontend/src/components/Footer.jsx
 import React from 'react';
-import { ShieldCheck, Anchor, Radio, CheckCircle2 } from 'lucide-react';
 import { APP_CONFIG } from '../utils/constants';
 
 export const Footer = () => {
   return (
-    <footer className="border-t border-slate-200/60 dark:border-slate-800/60 bg-white/70 dark:bg-navy-950/70 backdrop-blur-xl py-3.5 px-6 text-xs transition-colors">
+    <footer className="border-t border-slate-200/60 dark:border-slate-800/60 bg-white/70 dark:bg-slate-950/70 backdrop-blur-xl py-3.5 px-6 text-xs transition-colors">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
         {/* Left: Organization & PS ID */}
         <div className="flex flex-wrap items-center gap-2.5 text-xs">
@@ -14,7 +13,7 @@ export const Footer = () => {
             <span>OCEANCHARTER AI</span>
           </div>
           <span className="text-slate-300 dark:text-slate-700">•</span>
-          <span className="px-2 py-0.5 rounded-md bg-ocean-500/10 border border-ocean-500/20 text-ocean-700 dark:text-cyan-300 font-mono text-[11px] font-bold">
+          <span className="px-2 py-0.5 rounded-md bg-sky-500/10 border border-sky-500/20 text-sky-700 dark:text-cyan-300 font-mono text-[11px] font-bold">
             SIH 2026: {APP_CONFIG.problemId}
           </span>
           <span className="text-slate-300 dark:text-slate-700 hidden sm:inline">•</span>
