@@ -18,15 +18,11 @@ const initSchema = async (connection) => {
     CREATE TABLE IF NOT EXISTS cargo_dataset (
       id INT AUTO_INCREMENT PRIMARY KEY,
       year INT NOT NULL,
-      item VARCHAR(100) DEFAULT NULL,
-      dry_cargo_liner DECIMAL(15,2) DEFAULT 0,
-      dry_cargo_bulk_carrier DECIMAL(15,2) DEFAULT 0,
-      oil_tanker DECIMAL(15,2) DEFAULT 0,
-      passenger_cum_cargo DECIMAL(15,2) DEFAULT 0,
-      off_shore_supply DECIMAL(15,2) DEFAULT 0,
-      specialised_off_shore DECIMAL(15,2) DEFAULT 0,
-      timber_carrier DECIMAL(15,2) DEFAULT 0,
-      total DECIMAL(15,2) DEFAULT 0,
+      cargo_type VARCHAR(100) NOT NULL,
+      volume_mt DECIMAL(15,2) NOT NULL,
+      origin_port VARCHAR(100) NOT NULL,
+      destination_port VARCHAR(100) NOT NULL,
+      avg_freight_usd DECIMAL(10,2) NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
   `;

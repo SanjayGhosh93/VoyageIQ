@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { MarketTrendChart } from '../charts/MarketTrendChart';
 import { LoadingState } from '../components/LoadingState';
+import { CargoAnalytics } from '../components/CargoAnalytics';
 import { marketService } from '../services/api';
 
 export function MarketIntelPage() {
@@ -216,82 +217,7 @@ export function MarketIntelPage() {
           </div>
 
           {/* MySQL Historical Cargo Dataset Section */}
-          <div className="p-6 rounded-3xl bg-slate-900/80 border border-slate-800 space-y-6">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
-              <div>
-                <h2 className="text-lg font-bold text-cyan-400 flex items-center gap-2">
-                  <Database className="w-5 h-5 text-cyan-400" />
-                  MySQL Cargo Dataset Analysis
-                </h2>
-                <p className="text-xs text-slate-400 mt-0.5">Historical commodity movement dataset from database</p>
-              </div>
-              <div className="relative">
-                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
-                <input
-                  type="text"
-                  placeholder="Filter by year or item..."
-                  value={cargoSearchTerm}
-                  onChange={(e) => setCargoSearchTerm(e.target.value)}
-                  className="pl-9 pr-4 py-1.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-200 focus:outline-none focus:border-cyan-500 w-full md:w-64"
-                />
-              </div>
-            </div>
-
-            {/* Cargo Metrics Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="p-4 bg-slate-950/60 border border-slate-800 rounded-2xl">
-                <p className="text-[10px] font-semibold text-slate-400 uppercase">Dataset Rows</p>
-                <p className="text-xl font-bold text-white mt-1">{cargoData.length}</p>
-              </div>
-              <div className="p-4 bg-slate-950/60 border border-slate-800 rounded-2xl">
-                <p className="text-[10px] font-semibold text-slate-400 uppercase">Total Cargo Volume</p>
-                <p className="text-xl font-bold text-emerald-400 mt-1">{totalCargoVolume.toLocaleString()} MT</p>
-              </div>
-              <div className="p-4 bg-slate-950/60 border border-slate-800 rounded-2xl">
-                <p className="text-[10px] font-semibold text-slate-400 uppercase">Dry Bulk Total</p>
-                <p className="text-xl font-bold text-cyan-400 mt-1">{totalBulkCarrier.toLocaleString()} MT</p>
-              </div>
-              <div className="p-4 bg-slate-950/60 border border-slate-800 rounded-2xl">
-                <p className="text-[10px] font-semibold text-slate-400 uppercase">Oil Tanker Volume</p>
-                <p className="text-xl font-bold text-indigo-400 mt-1">{totalTanker.toLocaleString()} MT</p>
-              </div>
-            </div>
-
-            {/* Cargo Data Table */}
-            <div className="overflow-x-auto rounded-2xl border border-slate-800">
-              <table className="w-full text-left text-xs font-mono">
-                <thead className="bg-slate-950 text-slate-400 uppercase border-b border-slate-800">
-                  <tr>
-                    <th className="p-3">Year</th>
-                    <th className="p-3">Item Category</th>
-                    <th className="p-3">Dry Bulk Carrier</th>
-                    <th className="p-3">Oil Tanker</th>
-                    <th className="p-3">Off-shore Supply</th>
-                    <th className="p-3">Total Volume</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-800/60">
-                  {filteredCargoData.map((row) => (
-                    <tr key={row.id || `${row.year}-${row.item}`} className="hover:bg-slate-800/40 transition">
-                      <td className="p-3 font-semibold text-cyan-400">{row.year}</td>
-                      <td className="p-3 font-sans text-slate-200">{row.item}</td>
-                      <td className="p-3 text-slate-300">{row.dry_cargo_bulk_carrier?.toLocaleString() || '-'}</td>
-                      <td className="p-3 text-slate-300">{row.oil_tanker?.toLocaleString() || '-'}</td>
-                      <td className="p-3 text-slate-300">{row.off_shore_supply?.toLocaleString() || '-'}</td>
-                      <td className="p-3 font-bold text-white">{row.total?.toLocaleString() || '-'}</td>
-                    </tr>
-                  ))}
-                  {filteredCargoData.length === 0 && (
-                    <tr>
-                      <td colSpan="6" className="p-6 text-center text-slate-500 font-sans">
-                        No cargo records found.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <CargoAnalytics />
         </>
       )}
     </div>

@@ -1,7 +1,7 @@
 // frontend/src/components/CargoAnalytics.jsx
 import React, { useEffect, useState, useMemo } from 'react';
 
-export default function CargoAnalytics() {
+export function CargoAnalytics() {
   const [cargoData, setCargoData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -43,11 +43,11 @@ export default function CargoAnalytics() {
 
   // Recalculate summary metrics dynamically based on filtered subset
   const totalVolume = useMemo(() => {
-    return filteredData.reduce((acc, curr) => acc + (Number(curr?.total) || 0), 0);
+    return filteredData.reduce((acc, curr) => acc + (Number(curr?.total) || Number(curr?.volume_mt) || 0), 0);
   }, [filteredData]);
 
   const totalBulkCarrier = useMemo(() => {
-    return filteredData.reduce((acc, curr) => acc + (Number(curr?.dry_cargo_bulk_carrier) || 0), 0);
+    return filteredData.reduce((acc, curr) => acc + (Number(curr?.dry_cargo_bulk_carrier) || Number(curr?.volume_mt) || 0), 0);
   }, [filteredData]);
 
   if (loading) {
@@ -100,28 +100,28 @@ export default function CargoAnalytics() {
       </div>
 
       {/* Data Table */}
-      <div className="overflow-x-auto rounded-xl border border-slate-800">
+      <div className="overflow-x-auto max-h-[520px] rounded-xl border border-slate-800 shadow-inner">
         <table className="w-full text-left text-xs">
-          <thead className="bg-slate-950 text-slate-400 border-b border-slate-800 font-mono">
+          <thead className="sticky top-0 z-10 bg-slate-950 text-slate-400 border-b border-slate-800 font-mono">
             <tr>
               <th className="p-3">Year</th>
-              <th className="p-3">Item Category</th>
-              <th className="p-3">Dry Bulk Carrier</th>
-              <th className="p-3">Oil Tanker</th>
-              <th className="p-3">Off-shore Supply</th>
-              <th className="p-3">Total Volume</th>
+              <th className="p-3">Item / Cargo Type</th>
+              <th className="p-3 text-right">Dry Bulk Carrier / Volume</th>
+              <th className="p-3 text-right">Oil Tanker</th>
+              <th className="p-3 text-right">Off-shore Supply</th>
+              <th className="p-3 text-right font-bold text-sky-400">Total Volume</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-800/60 bg-slate-900/50">
+          <tbody className="divide-y divide-slate-800/60 bg-slate-900/50 font-mono">
             {filteredData.length > 0 ? (
               filteredData.map((row, index) => (
                 <tr key={row.id || index} className="hover:bg-slate-800/40 transition-colors">
-                  <td className="p-3 font-semibold text-sky-400 font-mono">{row.year ?? '-'}</td>
-                  <td className="p-3 text-slate-200 font-medium">{row.item ?? 'N/A'}</td>
-                  <td className="p-3 text-slate-300 font-mono">{(Number(row.dry_cargo_bulk_carrier) || 0).toLocaleString()}</td>
-                  <td className="p-3 text-slate-300 font-mono">{(Number(row.oil_tanker) || 0).toLocaleString()}</td>
-                  <td className="p-3 text-slate-300 font-mono">{(Number(row.off_shore_supply) || 0).toLocaleString()}</td>
-                  <td className="p-3 font-bold text-white font-mono">{(Number(row.total) || 0).toLocaleString()}</td>
+                  <td className="p-3 font-semibold text-sky-400">{row.year ?? '-'}</td>
+                  <td className="p-3 text-slate-200 font-sans font-medium">{row.item || row.cargo_type || 'N/A'}</td>
+                  <td className="p-3 text-right text-slate-300">{(Number(row.dry_cargo_bulk_carrier) || Number(row.volume_mt) || 0).toLocaleString()}</td>
+                  <td className="p-3 text-right text-slate-300">{(Number(row.oil_tanker) || 0).toLocaleString()}</td>
+                  <td className="p-3 text-right text-slate-300">{(Number(row.off_shore_supply) || 0).toLocaleString()}</td>
+                  <td className="p-3 text-right font-bold text-white">{(Number(row.total) || Number(row.volume_mt) || 0).toLocaleString()}</td>
                 </tr>
               ))
             ) : (
