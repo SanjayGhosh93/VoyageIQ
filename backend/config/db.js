@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 
+const ATLAS_URI = 'mongodb+srv://sanjayghosh7120_db_user:qqUXOWD2A5q6lGf2@newone.ornd32t.mongodb.net/oceancharter?retryWrites=true&w=majority&appName=newone';
+
 const connectDB = async () => {
-  const uri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/oceancharter';
+  const uri = process.env.MONGO_URI || ATLAS_URI;
   try {
     const conn = await mongoose.connect(uri, {
       serverSelectionTimeoutMS: 10000,

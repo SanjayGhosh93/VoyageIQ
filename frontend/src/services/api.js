@@ -1,14 +1,27 @@
 // frontend/src/services/api.js
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const CLOUD_API_URL = 'https://voyageiq-00yv.onrender.com/api';
+
+export const getApiBaseUrl = () => {
+  if (typeof window !== 'undefined') {
+    const host = window.location.hostname;
+    if (host === 'localhost' || host === '127.0.0.1') {
+      return 'http://localhost:5000/api';
+    }
+    return CLOUD_API_URL;
+  }
+  return import.meta.env.VITE_API_URL || CLOUD_API_URL;
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json'
   },
-  timeout: 10000
+  timeout: 15000
 });
 
 // Attach JWT token automatically
