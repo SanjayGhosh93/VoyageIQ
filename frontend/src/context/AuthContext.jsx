@@ -22,17 +22,12 @@ export const AuthProvider = ({ children }) => {
         } catch (e) {
           console.error('Failed to parse stored auth user', e);
         }
-      } else {
-        // Set default demo session user for fast SIH reviewing
-        const defaultDemoUser = {
-          name: 'Sanjay Ghosh',
-          email: 'admin@sail.gov.in',
-          role: 'Procurement Manager',
-          organization: 'Steel Authority of India Ltd (SAIL)',
-          department: 'Bulk Raw Materials & Chartering'
-        };
-        setUser(defaultDemoUser);
-        localStorage.setItem('oceancharter_user', JSON.stringify(defaultDemoUser));
+      } else if (storedUser) {
+        try {
+          setUser(JSON.parse(storedUser));
+        } catch (e) {
+          console.error('Failed to parse stored auth user', e);
+        }
       }
       setLoading(false);
     };
@@ -42,26 +37,35 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const res = await authService.login({ email, password });
-      if (res.success) {
+      const res = await authService.login({ email: email.trim(), password });
+      if (res?.success) {
         setUser(res.user);
         setToken(res.token);
         localStorage.setItem('oceancharter_token', res.token);
         localStorage.setItem('oceancharter_user', JSON.stringify(res.user));
-        return { success: true };
+        return { success: true, user: res.user };
       }
+      throw new Error(res?.message || 'Invalid email or password.');
     } catch (err) {
-      // Mock fallback login for testing
-      const mockUser = {
-        name: email.split('@')[0].toUpperCase(),
-        email,
-        role: email.includes('admin') ? 'Admin' : (email.includes('procurement') ? 'Procurement Manager' : 'Logistics Manager'),
-        organization: 'Steel Authority of India Ltd (SAIL)',
-        department: 'Bulk Maritime Logistics'
-      };
-      setUser(mockUser);
-      localStorage.setItem('oceancharter_user', JSON.stringify(mockUser));
-      return { success: true };
+      const msg = err.response?.data?.message || err.message || 'Login failed.';
+      throw new Error(msg);
+    }
+  };
+
+  const register = async (userData) => {
+    try {
+      const res = await authService.register(userData);
+      if (res?.success) {
+        setUser(res.user);
+        setToken(res.token);
+        localStorage.setItem('oceancharter_token', res.token);
+        localStorage.setItem('oceancharter_user', JSON.stringify(res.user));
+        return { success: true, user: res.user };
+      }
+      throw new Error(res?.message || 'Registration failed.');
+    } catch (err) {
+      const msg = err.response?.data?.message || err.message || 'Registration failed.';
+      throw new Error(msg);
     }
   };
 
@@ -80,7 +84,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, switchRole, logout }}>
+    <AuthContext.Provider value={{ user, token, loading, login, register, switchRole, logout }}>
       {children}
     </AuthContext.Provider>
   );
@@ -91,3 +95,4 @@ export const useAuth = () => {
   if (!context) throw new Error('useAuth must be used within an AuthProvider');
   return context;
 };
+

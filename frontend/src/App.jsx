@@ -3,6 +3,7 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { MainLayout } from './layouts/MainLayout';
 import { AuthLayout } from './layouts/AuthLayout';
+import { ProtectedRoute } from './components/ProtectedRoute';
 
 // Page imports
 import { LandingPage } from './pages/LandingPage';
@@ -38,25 +39,27 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
       </Route>
 
-      {/* Authenticated Logistics Application Routes */}
-      <Route element={<MainLayout />}>
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/forecast" element={<ForecastPage />} />
-        <Route path="/vessel-matcher" element={<VesselMatcherPage />} />
-        <Route path="/calculator" element={<CalculatorPage />} />
-        <Route path="/routes" element={<RouteOptimizerPage />} />
-        <Route path="/risk" element={<RiskCenterPage />} />
-        <Route path="/alerts" element={<AlertsPage />} />
-        <Route path="/scenarios" element={<ScenarioPlannerPage />} />
-        <Route path="/market" element={<MarketIntelPage />} />
-        <Route path="/ports" element={<PortDatabasePage />} />
-        <Route path="/vessels" element={<VesselDatabasePage />} />
-        <Route path="/idle" element={<IdleManagementPage />} />
-        <Route path="/reports" element={<ReportsPage />} />
+      {/* Authenticated Logistics Application Routes (Strictly Protected) */}
+      <Route element={<ProtectedRoute />}>
+        <Route element={<MainLayout />}>
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/forecast" element={<ForecastPage />} />
+          <Route path="/vessel-matcher" element={<VesselMatcherPage />} />
+          <Route path="/calculator" element={<CalculatorPage />} />
+          <Route path="/routes" element={<RouteOptimizerPage />} />
+          <Route path="/risk" element={<RiskCenterPage />} />
+          <Route path="/alerts" element={<AlertsPage />} />
+          <Route path="/scenarios" element={<ScenarioPlannerPage />} />
+          <Route path="/market" element={<MarketIntelPage />} />
+          <Route path="/ports" element={<PortDatabasePage />} />
+          <Route path="/vessels" element={<VesselDatabasePage />} />
+          <Route path="/idle" element={<IdleManagementPage />} />
+          <Route path="/reports" element={<ReportsPage />} />
+        </Route>
       </Route>
 
       {/* Fallback */}
-      <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

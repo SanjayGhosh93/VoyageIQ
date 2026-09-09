@@ -108,13 +108,6 @@ export const DashboardPage = () => {
         </div>
 
         <div className="flex items-center gap-3">
-          <button
-            onClick={openDemo}
-            className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 text-slate-950 font-extrabold text-xs font-mono transition-all shadow-lg shadow-amber-500/20 flex items-center gap-2 transform hover:scale-[1.02]"
-          >
-            <Sparkles className="w-4 h-4" />
-            <span>RUN 1-CLICK SIH DEMO</span>
-          </button>
           <Link
             to="/vessel-matcher"
             className="px-4 py-2 rounded-xl bg-ocean-600 hover:bg-ocean-500 text-white font-bold text-xs font-mono transition-colors shadow-md flex items-center gap-1.5"
@@ -127,7 +120,6 @@ export const DashboardPage = () => {
 
       {/* 8 Mandatory Dashboard KPIs */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* KPI 1: Current Freight */}
         <MetricCard
           title="Current Freight Rate"
           value="$18.42/MT"

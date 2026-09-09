@@ -15,7 +15,10 @@ const userSchema = new mongoose.Schema({
   avatarUrl: { type: String },
   dataQuality: { type: String, default: 'VERIFIED' },
   confidence: { type: Number, default: 0.98 },
-  source: { type: String, default: 'SAIL Single Sign-On / Local Security' }
+  source: { type: String, default: 'SAIL Single Sign-On / Local Security' },
+  lastLogin: { type: Date },
+  loginCount: { type: Number, default: 0 },
+  lastLoginIp: { type: String }
 }, {
   timestamps: true
 });

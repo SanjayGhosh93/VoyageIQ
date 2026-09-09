@@ -24,12 +24,30 @@ import { SihDemoModal } from '../components/SihDemoModal';
 import { IntroVideoSplash } from '../components/IntroVideoSplash';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { APP_CONFIG } from '../utils/constants';
+import { useAuth } from '../context/AuthContext';
 
 export const LandingPage = () => {
   const [demoOpen, setDemoOpen] = useState(false);
   const [showIntro, setShowIntro] = useState(true);
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
   const videoRef = React.useRef(null);
+
+  const handleExploreDashboard = () => {
+    if (user) {
+      navigate('/dashboard');
+    } else {
+      navigate('/login', { state: { from: '/dashboard' } });
+    }
+  };
+
+  const handleSmartCharter = () => {
+    if (user) {
+      navigate('/vessel-matcher');
+    } else {
+      navigate('/login', { state: { from: '/vessel-matcher' } });
+    }
+  };
 
   React.useEffect(() => {
     if (videoRef.current) {
@@ -94,25 +112,38 @@ export const LandingPage = () => {
               <span>Watch Intro</span>
             </button>
 
-            <Link
-              to="/presentation"
-              className="hidden sm:inline-flex text-xs font-semibold text-ocean-300 hover:text-white transition-colors"
-            >
-              Judge Deck
-            </Link>
-            <button
-              onClick={() => setDemoOpen(true)}
-              className="px-3.5 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs font-mono transition-all shadow-md shadow-amber-400/20 flex items-center gap-1.5"
-            >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>RUN SIH DEMO</span>
-            </button>
-            <Link
-              to="/login"
-              className="px-4 py-1.5 rounded-xl bg-ocean-600 hover:bg-ocean-500 text-white font-semibold text-xs font-mono transition-colors shadow-md"
-            >
-              Sign In
-            </Link>
+            {user ? (
+              <div className="flex items-center gap-2">
+                <Link
+                  to="/dashboard"
+                  className="px-4 py-1.5 rounded-xl bg-gradient-to-r from-ocean-500 to-cyan-500 hover:from-ocean-400 hover:to-cyan-400 text-slate-950 font-bold text-xs font-mono transition-all shadow-md flex items-center gap-1.5"
+                >
+                  <span>Dashboard</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+                <button
+                  onClick={logout}
+                  className="px-3 py-1.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 text-xs font-mono transition-colors"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Link
+                  to="/login"
+                  className="px-4 py-1.5 rounded-xl bg-ocean-600 hover:bg-ocean-500 text-white font-semibold text-xs font-mono transition-colors shadow-md"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  to="/register"
+                  className="hidden sm:inline-flex px-3.5 py-1.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-cyan-300 border border-cyan-500/30 text-xs font-mono font-semibold transition-all hover:border-cyan-400"
+                >
+                  Register
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </header>
@@ -137,7 +168,7 @@ export const LandingPage = () => {
             {/* CTA Buttons */}
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
               <button
-                onClick={() => navigate('/vessel-matcher')}
+                onClick={handleSmartCharter}
                 className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-ocean-500 to-cyan-500 hover:from-ocean-400 hover:to-cyan-400 text-slate-950 font-extrabold text-sm font-mono tracking-wide transition-all shadow-xl shadow-ocean-500/30 flex items-center gap-2 transform hover:scale-[1.02] border border-cyan-300/40"
               >
                 <span>RUN SMART CHARTER</span>
@@ -145,7 +176,7 @@ export const LandingPage = () => {
               </button>
 
               <button
-                onClick={() => navigate('/dashboard')}
+                onClick={handleExploreDashboard}
                 className="px-6 py-3.5 rounded-2xl bg-slate-900/85 hover:bg-slate-800 text-white border border-slate-700/80 font-bold text-sm font-mono transition-all flex items-center gap-2 shadow-xl backdrop-blur-md"
               >
                 <span>EXPLORE DASHBOARD</span>

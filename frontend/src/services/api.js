@@ -55,6 +55,18 @@ export const authService = {
   getMe: async () => {
     const res = await api.get('/auth/me');
     return res.data;
+  },
+  getLogs: async (params) => {
+    const res = await api.get('/auth/logs', { params });
+    return res.data;
+  },
+  getUsers: async () => {
+    const res = await api.get('/auth/users');
+    return res.data;
+  },
+  getStatus: async () => {
+    const res = await api.get('/auth/status');
+    return res.data;
   }
 };
 

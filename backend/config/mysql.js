@@ -37,7 +37,7 @@ const connectMySQL = async () => {
     console.log('[Database] MySQL tables verified/initialized.');
     connection.release();
   } catch (error) {
-    console.warn(`[Database Warning] Local MySQL connection failed (${error.message}).`);
+    console.warn(`[Database Warning] Local MySQL connection failed (${error.message || error.code || error}).`);
     console.warn('[Database Notice] OceanCharter AI will continue running with resilient dynamic fallback data.');
   }
 };

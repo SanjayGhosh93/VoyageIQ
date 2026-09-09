@@ -15,8 +15,6 @@ import {
   Anchor,
   Database,
   Clock,
-  FileSpreadsheet,
-  Presentation,
   ChevronLeft,
   ChevronRight
 } from 'lucide-react';
@@ -34,9 +32,7 @@ const NAV_ITEMS = [
   { name: 'Market Intelligence', path: '/market', icon: BarChart3 },
   { name: 'Port Intelligence', path: '/ports', icon: Anchor },
   { name: 'Vessel Database', path: '/vessels', icon: Database },
-  { name: 'Idle Management', path: '/idle', icon: Clock },
-  { name: 'Reports & Briefs', path: '/reports', icon: FileSpreadsheet },
-  { name: 'Presentation Mode', path: '/presentation', icon: Presentation }
+  { name: 'Idle Management', path: '/idle', icon: Clock }
 ];
 
 export const Sidebar = ({ onOpenDemo }) => {
