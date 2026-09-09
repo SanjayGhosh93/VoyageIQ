@@ -796,8 +796,8 @@ export default function RouteRadarPage() {
           --text: #e5eef8;
           height: calc(100dvh - 94px);
           min-height: 0;
-          width: calc(100% + clamp(0px, 14vw, 220px));
-          margin-left: calc(clamp(0px, 7vw, 110px) * -1);
+          width: 100%;
+          margin-left: 0;
           overflow: hidden;
           background: var(--bg);
           color: var(--text);
