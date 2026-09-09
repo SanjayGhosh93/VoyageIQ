@@ -16,7 +16,8 @@ import {
   Database,
   Clock,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Compass
 } from 'lucide-react';
 
 const NAV_ITEMS = [
@@ -26,6 +27,7 @@ const NAV_ITEMS = [
   { name: 'Vessel Matcher', path: '/vessel-matcher', icon: Ship },
   { name: 'Chartering Calculator', path: '/calculator', icon: Calculator },
   { name: 'Route Optimizer', path: '/routes', icon: Navigation },
+  { name: 'Route Radar', path: '/route-radar', icon: Compass },
   { name: 'Risk Center', path: '/risk', icon: ShieldAlert },
   { name: 'Early Warnings', path: '/alerts', icon: BellRing, badge: '5' },
   { name: 'Scenario Planner', path: '/scenarios', icon: GitCompare },

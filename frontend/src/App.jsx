@@ -23,6 +23,7 @@ import { VesselDatabasePage } from './pages/VesselDatabasePage';
 import { IdleManagementPage } from './pages/IdleManagementPage';
 import { ReportsPage } from './pages/ReportsPage';
 import { PresentationPage } from './pages/PresentationPage';
+import CargoRadarPage from './pages/CargoRadarPage';
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
           <Route path="/vessel-matcher" element={<VesselMatcherPage />} />
           <Route path="/calculator" element={<CalculatorPage />} />
           <Route path="/routes" element={<RouteOptimizerPage />} />
+          <Route path="/route-radar" element={<CargoRadarPage />} />
           <Route path="/risk" element={<RiskCenterPage />} />
           <Route path="/alerts" element={<AlertsPage />} />
           <Route path="/scenarios" element={<ScenarioPlannerPage />} />
