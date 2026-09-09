@@ -18,7 +18,8 @@ import {
   FileSpreadsheet,
   Presentation,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Compass // <-- Added missing import
 } from 'lucide-react';
 
 const NAV_ITEMS = [
@@ -36,7 +37,12 @@ const NAV_ITEMS = [
   { name: 'Vessel Database', path: '/vessels', icon: Database },
   { name: 'Idle Management', path: '/idle', icon: Clock },
   { name: 'Reports & Briefs', path: '/reports', icon: FileSpreadsheet },
-  { name: 'Presentation Mode', path: '/presentation', icon: Presentation }
+  { name: 'Presentation Mode', path: '/presentation', icon: Presentation },
+  {
+    name: 'Route Radar',
+    path: '/route-radar',
+    icon: Compass
+  }
 ];
 
 export const Sidebar = ({ onOpenDemo }) => {

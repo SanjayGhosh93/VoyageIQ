@@ -23,6 +23,8 @@ import { IdleManagementPage } from './pages/IdleManagementPage';
 import { ReportsPage } from './pages/ReportsPage';
 import { PresentationPage } from './pages/PresentationPage';
 
+import CargoRadarPage from './pages/CargoRadarPage';
+
 function App() {
   return (
     <Routes>
@@ -53,6 +55,8 @@ function App() {
         <Route path="/vessels" element={<VesselDatabasePage />} />
         <Route path="/idle" element={<IdleManagementPage />} />
         <Route path="/reports" element={<ReportsPage />} />
+
+        <Route path="/route-radar" element={<CargoRadarPage />} />
       </Route>
 
       {/* Fallback */}
