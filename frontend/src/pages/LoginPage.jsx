@@ -77,6 +77,14 @@ export const LoginPage = () => {
       tag: 'ML',
       tagColor: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
       icon: '📊'
+    },
+    {
+      id: 'Viewer',
+      name: 'Normal User',
+      email: 'viewer@sail.gov.in',
+      tag: 'Viewer',
+      tagColor: 'bg-teal-500/10 text-teal-400 border-teal-500/20',
+      icon: '👤'
     }
   ];
 
@@ -159,9 +167,9 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className="w-full max-w-xl mx-auto space-y-4">
+    <div className="w-full max-w-xl mx-auto space-y-4 px-2 sm:px-0">
       {/* Top Real-Time MongoDB Telemetry Bar */}
-      <div className="flex items-center justify-between px-4 py-2.5 rounded-2xl bg-slate-900/80 backdrop-blur-md border border-slate-700/60 shadow-lg text-xs">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-3 sm:px-4 py-2.5 rounded-2xl bg-slate-900/80 backdrop-blur-md border border-slate-700/60 shadow-lg text-xs gap-2">
         <div className="flex items-center gap-2.5">
           <span className="relative flex h-2.5 w-2.5">
             <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${dbStatus.connected ? 'bg-emerald-400' : 'bg-amber-400'} opacity-75`}></span>
@@ -174,7 +182,7 @@ export const LoginPage = () => {
           </span>
         </div>
 
-        <div className="flex items-center gap-3 font-mono text-[11px] text-slate-400">
+        <div className="flex items-center gap-3 font-mono text-[11px] text-slate-400 self-end sm:self-auto">
           <span className="hidden sm:inline bg-slate-800/80 px-2 py-0.5 rounded-md border border-slate-700 text-slate-300">
             👥 {dbStatus.userCount} Active Officers
           </span>
@@ -190,7 +198,7 @@ export const LoginPage = () => {
       </div>
 
       {/* Main Glass Card */}
-      <div className="p-7 sm:p-8 rounded-3xl bg-slate-900/85 backdrop-blur-xl border border-slate-700/70 shadow-2xl space-y-6 text-slate-100">
+      <div className="p-4 sm:p-8 rounded-3xl bg-slate-900/85 backdrop-blur-xl border border-slate-700/70 shadow-2xl space-y-6 text-slate-100">
         
         {/* Navigation Tabs: Sign In / Register */}
         <div className="flex items-center justify-center p-1 rounded-2xl bg-slate-950/70 border border-slate-800/80 font-mono text-xs">
@@ -257,15 +265,18 @@ export const LoginPage = () => {
             )}
           </div>
 
-          <div className="grid grid-cols-2 gap-2 text-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
             {demoRoles.map((role) => {
               const isSelected = selectedRole === role.id;
+              const isViewer = role.id === 'Viewer';
               return (
                 <button
                   key={role.id}
                   type="button"
                   onClick={() => handleSelectRole(role)}
                   className={`group p-2.5 rounded-xl border text-left transition-all flex flex-col justify-between ${
+                    isViewer ? 'sm:col-span-2' : ''
+                  } ${
                     isSelected
                       ? 'bg-slate-800/90 border-cyan-400 ring-1 ring-cyan-400/50 shadow-md shadow-cyan-500/20'
                       : 'bg-slate-850/70 hover:bg-slate-800/80 border-slate-700/70 hover:border-slate-600'

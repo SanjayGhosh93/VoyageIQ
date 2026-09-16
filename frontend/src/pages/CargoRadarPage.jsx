@@ -31,6 +31,8 @@ import {
   Waves,
   Droplets,
   MapPin,
+  Satellite,
+  Map as MapIcon,
 } from 'lucide-react';
 
 /*
@@ -549,6 +551,7 @@ function RadarScope({ vessels, selectedShipId, onSelect }) {
 }
 
 export default function RouteRadarPage() {
+  const [mapMode, setMapMode] = useState('satellite'); // 'satellite' | 'ocean' | 'standard'
   const [search, setSearch] = useState('');
   const [selectedType, setSelectedType] = useState('all');
   const [originId, setOriginId] = useState('mumbai');
@@ -1113,12 +1116,21 @@ export default function RouteRadarPage() {
         body.light .cargo-map .leaflet-control-zoom a,
         [data-theme="light"] .cargo-map .leaflet-control-zoom a { background: #ffffff !important; color: #1e293b !important; }
 
-        .map-topbar { position: absolute; z-index: 900; left: 14px; right: 14px; top: 12px; display: flex; justify-content: space-between; pointer-events: none; }
+        .map-topbar { position: absolute; z-index: 900; left: 14px; right: 14px; top: 12px; display: flex; justify-content: space-between; align-items: center; gap: 8px; pointer-events: none; }
         .map-title-card, .map-time-card { pointer-events: auto; background: rgba(2, 6, 23, .78); border: 1px solid rgba(148, 163, 184, .13); backdrop-filter: blur(8px); border-radius: 8px; padding: 7px 9px; }
         .map-title-card { display: flex; align-items: center; gap: 8px; }
         .map-title { font-size: 14px; font-weight: 900; letter-spacing: .12em; }
         .map-title-sub { font-size: 10px; color: #718ba1; margin-top: 2px; }
         .map-time-card { font-size: 9px; color: #7f98ae; display: flex; gap: 6px; align-items: center; }
+
+        .map-mode-switcher { pointer-events: auto; background: rgba(2, 6, 23, .85); border: 1px solid rgba(148, 163, 184, .18); backdrop-filter: blur(10px); border-radius: 8px; padding: 3px 4px; display: flex; align-items: center; gap: 4px; }
+        .map-mode-btn { background: transparent; border: 1px solid transparent; color: #94a3b8; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 5px 11px; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s ease; user-select: none; }
+        .map-mode-btn:hover { color: #e2e8f0; background: rgba(255, 255, 255, .06); }
+        .map-mode-btn.active { background: rgba(6, 182, 212, .22); border-color: rgba(34, 211, 238, .6); color: #38bdf8; box-shadow: 0 0 12px rgba(34, 211, 238, .2); }
+
+        .route-radar-page.light-mode .map-mode-switcher, body.light .map-mode-switcher, [data-theme="light"] .map-mode-switcher { background: rgba(255, 255, 255, .9); border-color: rgba(203, 213, 225, .8); }
+        .route-radar-page.light-mode .map-mode-btn, body.light .map-mode-btn, [data-theme="light"] .map-mode-btn { color: #64748b; }
+        .route-radar-page.light-mode .map-mode-btn.active, body.light .map-mode-btn.active, [data-theme="light"] .map-mode-btn.active { background: rgba(14, 165, 233, .16); border-color: rgba(14, 165, 233, .6); color: #0284c7; }
         .map-actions { position: absolute; right: 14px; top: 78px; z-index: 1100; display: flex; flex-direction: column; gap: 5px; }
         .map-actions button { width: 30px; height: 30px; border: 1px solid rgba(148, 163, 184, .16); background: rgba(2, 6, 23, .82); color: #86a2b9; border-radius: 7px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         .map-actions button:hover { color: #67e8f9; border-color: rgba(34, 211, 238, .3); }
@@ -1357,7 +1369,7 @@ export default function RouteRadarPage() {
             center={WORLD_CENTER}
             zoom={2}
             minZoom={2}
-            maxZoom={7}
+            maxZoom={12}
             worldCopyJump
             zoomControl
             whenReady={(e) => {
@@ -1367,8 +1379,70 @@ export default function RouteRadarPage() {
           >
             <MapAutoResize />
             <MapClickDeselect selectedShipId={selectedShipId} onClear={clearSelection} />
-            <TileLayer attribution="&copy; OpenStreetMap" url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-            <TileLayer attribution="OpenSeaMap" url="https://t1.openseamap.org/seamark/{z}/{x}/{y}.png" opacity={0.82} />
+
+            {mapMode === 'satellite' && (
+              <>
+                <TileLayer
+                  key="satellite-base"
+                  attribution="Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
+                  url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+                  maxZoom={18}
+                />
+                <TileLayer
+                  key="satellite-labels"
+                  attribution="&copy; Esri"
+                  url="https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
+                  maxZoom={18}
+                  opacity={0.88}
+                />
+                <TileLayer
+                  key="satellite-seamark"
+                  attribution="OpenSeaMap"
+                  url="https://t1.openseamap.org/seamark/{z}/{x}/{y}.png"
+                  opacity={0.72}
+                />
+              </>
+            )}
+
+            {mapMode === 'ocean' && (
+              <>
+                <TileLayer
+                  key="ocean-base"
+                  attribution="Tiles &copy; Esri &mdash; Sources: GEBCO, NOAA, CHS, OSU, UNH, CSUMB, National Geographic, DeLorme, NAVTEQ, and Esri"
+                  url="https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}"
+                  maxZoom={13}
+                />
+                <TileLayer
+                  key="ocean-reference"
+                  attribution="&copy; Esri"
+                  url="https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Reference/MapServer/tile/{z}/{y}/{x}"
+                  maxZoom={13}
+                  opacity={0.9}
+                />
+                <TileLayer
+                  key="ocean-seamark"
+                  attribution="OpenSeaMap"
+                  url="https://t1.openseamap.org/seamark/{z}/{x}/{y}.png"
+                  opacity={0.8}
+                />
+              </>
+            )}
+
+            {mapMode === 'standard' && (
+              <>
+                <TileLayer
+                  key="standard-base"
+                  attribution="&copy; OpenStreetMap contributors"
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <TileLayer
+                  key="standard-seamark"
+                  attribution="OpenSeaMap"
+                  url="https://t1.openseamap.org/seamark/{z}/{x}/{y}.png"
+                  opacity={0.82}
+                />
+              </>
+            )}
             <MapViewport route={route} />
 
             {route?.path?.length > 1 && (
@@ -1483,9 +1557,40 @@ export default function RouteRadarPage() {
               <Globe2 size={15} color="#22d3ee" />
               <div>
                 <div className="map-title">WORLD SEA ROUTES</div>
-                <div className="map-title-sub">MARNET · OPEN-METEO · KM</div>
+                <div className="map-title-sub">MARNET · OPEN-METEO · REAL-TIME</div>
               </div>
             </div>
+
+            <div className="map-mode-switcher">
+              <button
+                type="button"
+                className={`map-mode-btn ${mapMode === 'satellite' ? 'active' : ''}`}
+                onClick={() => setMapMode('satellite')}
+                title="Real satellite earth imagery with realistic ocean bathymetry"
+              >
+                <Satellite size={13} />
+                <span>Real Satellite</span>
+              </button>
+              <button
+                type="button"
+                className={`map-mode-btn ${mapMode === 'ocean' ? 'active' : ''}`}
+                onClick={() => setMapMode('ocean')}
+                title="Esri World Ocean basemap with bathymetric relief"
+              >
+                <Waves size={13} />
+                <span>Real Ocean</span>
+              </button>
+              <button
+                type="button"
+                className={`map-mode-btn ${mapMode === 'standard' ? 'active' : ''}`}
+                onClick={() => setMapMode('standard')}
+                title="Standard vector maritime chart"
+              >
+                <MapIcon size={13} />
+                <span>Standard</span>
+              </button>
+            </div>
+
             <div className="map-time-card"><CalendarClock size={12} /> {formatClock(lastUpdate)}</div>
           </div>
 

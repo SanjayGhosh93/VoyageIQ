@@ -8,20 +8,21 @@ import {
   ChevronDown, 
   LogOut, 
   ShieldCheck, 
-  Sparkles,
-  Layers,
-  Home,
-  Ship,
-  Anchor,
-  Navigation,
-  Calculator,
-  TrendingUp,
-  ShieldAlert,
-  BarChart3,
-  Clock,
-  FileSpreadsheet,
-  X,
-  ArrowUpRight
+  Sparkles, 
+  Layers, 
+  Home, 
+  Ship, 
+  Anchor, 
+  Navigation, 
+  Calculator, 
+  TrendingUp, 
+  ShieldAlert, 
+  BarChart3, 
+  Clock, 
+  FileSpreadsheet, 
+  X, 
+  ArrowUpRight,
+  Menu
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { ThemeToggle } from './ThemeToggle';
@@ -83,7 +84,7 @@ const SEARCH_INDEX = [
   { title: 'Vostochny (Russia) to Paradip', subtitle: '5,600 NM • Russian PCI / Coking Coal Corridor', category: 'Route', path: '/routes', icon: Navigation }
 ];
 
-export const Navbar = ({ onOpenDemo }) => {
+export const Navbar = ({ onOpenDemo, onToggleMobileSidebar, isMobileSidebarOpen }) => {
   const { user, switchRole, logout } = useAuth();
   const [showRoleMenu, setShowRoleMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -92,7 +93,14 @@ export const Navbar = ({ onOpenDemo }) => {
   const searchRef = useRef(null);
   const navigate = useNavigate();
 
-  const roles = ['Logistics Planner', 'Commercial Charterer', 'Port Operations Manager', 'Executive'];
+  const roles = [
+    'Logistics Planner',
+    'Commercial Charterer',
+    'Port Operations Manager',
+    'Market Analyst',
+    'System Admin',
+    'Normal User (Viewer)'
+  ];
 
   // Memoize filtered results for high search performance
   const filteredResults = useMemo(() => {
@@ -133,14 +141,24 @@ export const Navbar = ({ onOpenDemo }) => {
   };
 
   return (
-    <header className="h-16 px-6 border-b border-slate-200/60 dark:border-slate-800/60 bg-white/70 dark:bg-slate-950/70 backdrop-blur-xl flex items-center justify-between gap-4 sticky top-0 z-40 transition-colors shadow-sm">
-      {/* Left: Global Interactive Search Bar */}
-      <div className="flex-1 max-w-xl relative" ref={searchRef}>
+    <header className="h-16 px-3 sm:px-6 border-b border-slate-200/60 dark:border-slate-800/60 bg-white/70 dark:bg-slate-950/70 backdrop-blur-xl flex items-center justify-between gap-2 sm:gap-4 sticky top-0 z-40 transition-colors shadow-sm">
+      {/* Left: Mobile Navigation Drawer Toggle */}
+      <button
+        type="button"
+        onClick={onToggleMobileSidebar}
+        className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 lg:hidden shrink-0 transition-colors"
+        aria-label="Toggle Navigation Drawer"
+      >
+        {isMobileSidebarOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+      </button>
+
+      {/* Global Interactive Search Bar */}
+      <div className="flex-1 max-w-xl relative min-w-0" ref={searchRef}>
         <div className="relative">
           <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
-            placeholder="Search port, vessel, IMO, route, calculator or tariff..."
+            placeholder="Search port, vessel, route, tariff..."
             value={searchQuery}
             onFocus={() => setIsSearchOpen(true)}
             onChange={(e) => {
@@ -148,7 +166,7 @@ export const Navbar = ({ onOpenDemo }) => {
               setIsSearchOpen(true);
             }}
             onKeyDown={handleKeyDown}
-            className="w-full pl-10 pr-9 py-2 text-xs rounded-xl bg-slate-100/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-700/80 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all font-sans"
+            className="w-full pl-9 sm:pl-10 pr-8 sm:pr-9 py-2 text-xs rounded-xl bg-slate-100/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-700/80 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all font-sans"
           />
           {searchQuery && (
             <button
@@ -235,7 +253,7 @@ export const Navbar = ({ onOpenDemo }) => {
       </div>
 
       {/* Right: Actions, Demo Button, Theme Toggle, User */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
         {/* Day / Night Mode Toggle */}
         <ThemeToggle />
 
@@ -262,7 +280,7 @@ export const Navbar = ({ onOpenDemo }) => {
           </button>
 
           {showNotifications && (
-            <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-3 z-50 animate-in fade-in slide-in-from-top-2">
+            <div className="absolute right-0 mt-2 w-72 sm:w-80 max-w-[calc(100vw-1.5rem)] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-3 z-50 animate-in fade-in slide-in-from-top-2">
               <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-700 dark:text-slate-300">
                 <span>ACTIVE ALERTS</span>
                 <Link to="/alerts" onClick={() => setShowNotifications(false)} className="text-sky-600 dark:text-sky-400 hover:underline">
@@ -291,7 +309,7 @@ export const Navbar = ({ onOpenDemo }) => {
         <div className="relative">
           <button
             onClick={() => setShowRoleMenu(!showRoleMenu)}
-            className="flex items-center gap-2.5 p-1.5 pr-3 rounded-xl bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-colors"
+            className="flex items-center gap-1.5 sm:gap-2.5 p-1.5 sm:pr-3 rounded-xl bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-colors"
           >
             <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-sky-600 to-cyan-400 flex items-center justify-center text-white font-bold text-xs shadow-md shrink-0">
               {user?.name?.charAt(0) || 'U'}
@@ -306,7 +324,7 @@ export const Navbar = ({ onOpenDemo }) => {
           </button>
 
           {showRoleMenu && (
-            <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-2 z-50 text-xs">
+            <div className="absolute right-0 mt-2 w-64 max-w-[calc(100vw-1.5rem)] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-2 z-50 text-xs">
               <div className="p-2.5 border-b border-slate-200 dark:border-slate-800 mb-1">
                 <div className="font-bold text-slate-800 dark:text-slate-200">{user?.name}</div>
                 <div className="text-[11px] text-slate-500 dark:text-slate-400">{user?.email}</div>

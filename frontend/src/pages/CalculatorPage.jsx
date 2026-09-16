@@ -69,13 +69,13 @@ export const CalculatorPage = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="p-6 rounded-3xl bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950 border border-sky-500/25 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="p-4 sm:p-6 rounded-3xl bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950 border border-sky-500/25 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 text-xs font-mono font-bold text-sky-400 uppercase tracking-widest">
             <Calculator className="w-4 h-4 text-cyan-400" />
             <span>SAIL TOTAL LANDED COST & WHAT-IF ENGINE</span>
           </div>
-          <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight mt-1">
+          <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight mt-1">
             Chartering Cost & Sensitivity Simulator
           </h1>
           <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
@@ -83,9 +83,9 @@ export const CalculatorPage = () => {
           </p>
         </div>
 
-        <div className="text-right">
+        <div className="text-left sm:text-right">
           <div className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-mono">Current Landed Benchmark</div>
-          <div className="text-2xl font-extrabold text-cyan-600 dark:text-cyan-400 font-mono">
+          <div className="text-xl sm:text-2xl font-extrabold text-cyan-600 dark:text-cyan-400 font-mono">
             {formatCurrencyPerMT(costData?.costs?.costPerMT || 27.31)}
           </div>
         </div>
@@ -94,7 +94,7 @@ export const CalculatorPage = () => {
       {/* Main Grid: Parameters on Left, What-If Sliders on Right */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left 7 Cols: Form Inputs */}
-        <div className="lg:col-span-7 p-6 rounded-3xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
+        <div className="lg:col-span-7 p-4 sm:p-6 rounded-3xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
           <div className="text-xs font-mono font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 flex items-center gap-2 pb-2 border-b border-slate-200 dark:border-slate-800">
             <Sliders className="w-4 h-4 text-sky-500 dark:text-sky-400" />
             <span>Chartering Voyage Parameters</span>

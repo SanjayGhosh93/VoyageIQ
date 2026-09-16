@@ -89,18 +89,18 @@ export const LandingPage = () => {
       </div>
 
       {/* Top Navigation */}
-      <header className="sticky top-0 z-40 bg-navy-950/70 dark:bg-navy-900/80 backdrop-blur-md border-b border-slate-700/50 px-6 py-4 transition-colors">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-slate-900/40 p-1 flex items-center justify-center border border-ocean-500/30 shadow-lg shadow-ocean-500/25 shrink-0">
+      <header className="sticky top-0 z-40 bg-navy-950/70 dark:bg-navy-900/80 backdrop-blur-md border-b border-slate-700/50 px-3 sm:px-6 py-3 sm:py-4 transition-colors">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
+          <Link to="/" className="flex items-center gap-2 sm:gap-3 shrink-0">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-900/40 p-1 flex items-center justify-center border border-ocean-500/30 shadow-lg shadow-ocean-500/25 shrink-0">
               <img src="/app-logo.png" alt="OCEANCHARTER AI" className="w-full h-full object-contain filter drop-shadow" />
             </div>
-            <span className="font-extrabold text-lg tracking-tight text-white font-mono">
+            <span className="font-extrabold text-base sm:text-lg tracking-tight text-white font-mono truncate">
               OCEANCHARTER AI
             </span>
           </Link>
 
-          <div className="flex items-center gap-3 sm:gap-4">
+          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
             {/* Day / Night Mode Toggle */}
             <ThemeToggle />
 
@@ -116,14 +116,14 @@ export const LandingPage = () => {
               <div className="flex items-center gap-2">
                 <Link
                   to="/dashboard"
-                  className="px-4 py-1.5 rounded-xl bg-gradient-to-r from-ocean-500 to-cyan-500 hover:from-ocean-400 hover:to-cyan-400 text-slate-950 font-bold text-xs font-mono transition-all shadow-md flex items-center gap-1.5"
+                  className="px-3 sm:px-4 py-1.5 rounded-xl bg-gradient-to-r from-ocean-500 to-cyan-500 hover:from-ocean-400 hover:to-cyan-400 text-slate-950 font-bold text-xs font-mono transition-all shadow-md flex items-center gap-1.5"
                 >
                   <span>Dashboard</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
                 <button
                   onClick={logout}
-                  className="px-3 py-1.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 text-xs font-mono transition-colors"
+                  className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 text-xs font-mono transition-colors"
                 >
                   Logout
                 </button>
@@ -132,7 +132,7 @@ export const LandingPage = () => {
               <div className="flex items-center gap-2">
                 <Link
                   to="/login"
-                  className="px-4 py-1.5 rounded-xl bg-ocean-600 hover:bg-ocean-500 text-white font-semibold text-xs font-mono transition-colors shadow-md"
+                  className="px-3 sm:px-4 py-1.5 rounded-xl bg-ocean-600 hover:bg-ocean-500 text-white font-semibold text-xs font-mono transition-colors shadow-md"
                 >
                   Sign In
                 </Link>
@@ -149,11 +149,11 @@ export const LandingPage = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="relative min-h-[88vh] flex items-center pt-8 pb-20 px-6 z-10">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10 w-full">
+      <section className="relative min-h-[85vh] flex items-center pt-6 pb-16 px-4 sm:px-6 z-10">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10 w-full">
           {/* Hero Left Copy */}
-          <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight drop-shadow-lg">
+          <div className="lg:col-span-7 space-y-5 sm:space-y-6 text-center lg:text-left">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight drop-shadow-lg">
               Predict Freight.{' '}
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-sky-300 to-amber-300">
                 Optimize Vessels.
@@ -161,15 +161,15 @@ export const LandingPage = () => {
               Reduce Demurrage.
             </h1>
 
-            <p className="text-base sm:text-lg text-slate-200 dark:text-slate-200 max-w-2xl leading-relaxed drop-shadow-md font-medium">
+            <p className="text-sm sm:text-base lg:text-lg text-slate-200 dark:text-slate-200 max-w-2xl leading-relaxed drop-shadow-md font-medium mx-auto lg:mx-0">
               {APP_CONFIG.subtitle}
             </p>
 
             {/* CTA Buttons */}
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start gap-3 sm:gap-4 pt-2 w-full">
               <button
                 onClick={handleSmartCharter}
-                className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-ocean-500 to-cyan-500 hover:from-ocean-400 hover:to-cyan-400 text-slate-950 font-extrabold text-sm font-mono tracking-wide transition-all shadow-xl shadow-ocean-500/30 flex items-center gap-2 transform hover:scale-[1.02] border border-cyan-300/40"
+                className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-ocean-500 to-cyan-500 hover:from-ocean-400 hover:to-cyan-400 text-slate-950 font-extrabold text-sm font-mono tracking-wide transition-all shadow-xl shadow-ocean-500/30 flex items-center justify-center gap-2 transform hover:scale-[1.02] border border-cyan-300/40"
               >
                 <span>RUN SMART CHARTER</span>
                 <ArrowRight className="w-4 h-4" />
@@ -177,14 +177,14 @@ export const LandingPage = () => {
 
               <button
                 onClick={handleExploreDashboard}
-                className="px-6 py-3.5 rounded-2xl bg-slate-900/85 hover:bg-slate-800 text-white border border-slate-700/80 font-bold text-sm font-mono transition-all flex items-center gap-2 shadow-xl backdrop-blur-md"
+                className="px-6 py-3.5 rounded-2xl bg-slate-900/85 hover:bg-slate-800 text-white border border-slate-700/80 font-bold text-sm font-mono transition-all flex items-center justify-center gap-2 shadow-xl backdrop-blur-md"
               >
                 <span>EXPLORE DASHBOARD</span>
               </button>
 
               <button
                 onClick={() => setShowIntro(true)}
-                className="px-4 py-3.5 rounded-2xl bg-ocean-950/60 hover:bg-ocean-900/80 text-ocean-300 border border-ocean-500/40 font-bold text-sm font-mono transition-all flex items-center gap-2 backdrop-blur-md"
+                className="px-4 py-3.5 rounded-2xl bg-ocean-950/60 hover:bg-ocean-900/80 text-ocean-300 border border-ocean-500/40 font-bold text-sm font-mono transition-all flex items-center justify-center gap-2 backdrop-blur-md"
               >
                 <Video className="w-4 h-4 text-cyan-400" />
                 <span>WATCH ANIMATION</span>

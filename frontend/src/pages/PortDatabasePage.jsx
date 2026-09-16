@@ -47,13 +47,13 @@ export const PortDatabasePage = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="p-6 rounded-3xl bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950 border border-sky-500/25 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="p-4 sm:p-6 rounded-3xl bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950 border border-sky-500/25 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 text-xs font-mono font-bold text-sky-400 uppercase tracking-widest">
             <Anchor className="w-4 h-4 text-cyan-400" />
             <span>SAIL MARITIME INFRASTRUCTURE REPOSITORY</span>
           </div>
-          <h1 className="text-2xl font-extrabold text-white tracking-tight mt-1">
+          <h1 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight mt-1">
             Port Intelligence & Navigational Constraints
           </h1>
           <p className="text-xs text-slate-400 mt-1">
@@ -61,7 +61,7 @@ export const PortDatabasePage = () => {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={() => setRegionFilter('ALL')}
             className={`px-3 py-1.5 rounded-xl text-xs font-mono font-semibold transition-all ${

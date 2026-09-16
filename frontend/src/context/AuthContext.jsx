@@ -59,6 +59,12 @@ export const AuthProvider = ({ children }) => {
       role: 'Market Analyst',
       organization: 'SAIL Logistics Directorate',
       department: 'Intelligence & Research'
+    },
+    'viewer@sail.gov.in': {
+      name: 'Normal User (Viewer)',
+      role: 'Normal User',
+      organization: 'Ministry of Steel / SAIL Observer',
+      department: 'Operations Review'
     }
   };
 

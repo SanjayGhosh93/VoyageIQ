@@ -65,58 +65,59 @@ export const DashboardPage = () => {
     return () => clearInterval(interval);
   }, []);
 
-  return (
-    <div className="space-y-6">
-      {/* Live Market & Telemetry Ticker Ribbon */}
-      <div className="px-4 py-2 rounded-2xl bg-slate-900/90 border border-ocean-500/30 text-xs font-mono flex flex-wrap items-center justify-between gap-3 shadow-lg">
-        <div className="flex items-center gap-3">
-          <span className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/40 text-[10px]">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-            <span>REAL-TIME FEED ACTIVE</span>
-          </span>
-          <span className="text-slate-400 hidden sm:inline">•</span>
-          <div className="flex items-center gap-4 text-[11px] text-slate-300">
-            <span>BDI: <strong className="text-cyan-300">{liveMarket?.indices?.BDI?.value || '1,885'}</strong> ({liveMarket?.indices?.BDI?.change || '+2.4%'})</span>
-            <span>BCI Capesize: <strong className="text-amber-300">{liveMarket?.indices?.BCI?.value || '2,940'}</strong></span>
-            <span>VLSFO Singapore: <strong className="text-emerald-300">${liveMarket?.bunkerFuel?.VLSFO_Singapore?.priceUSD || '642.50'}/MT</strong></span>
-          </div>
-        </div>
+  return (
+    <div className="space-y-6">
+      {/* Live Market & Telemetry Ticker Ribbon */}
+      <div className="px-3 sm:px-4 py-2 rounded-2xl bg-slate-900/90 border border-ocean-500/30 text-xs font-mono flex flex-wrap items-center justify-between gap-2 sm:gap-3 shadow-lg">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          <span className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/40 text-[10px]">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+            <span>REAL-TIME FEED</span>
+          </span>
+          <span className="text-slate-400 hidden sm:inline">•</span>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-300">
+            <span>BDI: <strong className="text-cyan-300">{liveMarket?.indices?.BDI?.value || '1,885'}</strong> ({liveMarket?.indices?.BDI?.change || '+2.4%'})</span>
+            <span>BCI: <strong className="text-amber-300">{liveMarket?.indices?.BCI?.value || '2,940'}</strong></span>
+            <span>VLSFO Sing.: <strong className="text-emerald-300">${liveMarket?.bunkerFuel?.VLSFO_Singapore?.priceUSD || '642.50'}/MT</strong></span>
+          </div>
+        </div>
 
-        <div className="flex items-center gap-2 text-[10px] text-slate-400">
-          <span>Synced: {lastSync.toLocaleTimeString()}</span>
-          <button
-            onClick={loadDashboardData}
-            className="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold transition-colors"
-          >
-            ↻ Refresh Live
-          </button>
-        </div>
-      </div>
-      {/* Top Banner: SIH 2026 Executive Header */}
-      <div className="p-6 rounded-3xl bg-gradient-to-r from-navy-900 via-slate-900 to-navy-950 border border-ocean-500/25 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2 text-xs font-mono font-bold text-ocean-400 uppercase tracking-widest">
-            <Anchor className="w-3.5 h-3.5 text-cyan-400" />
-            <span>SAIL BULK CARGO LOGISTICS CONTROL TOWER</span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mt-1">
-            Executive Maritime Dashboard
-          </h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Overseas Procurement Corridors (Australia / Indonesia / S. Africa) → India East Coast
-          </p>
-        </div>
+        <div className="flex items-center gap-2 text-[10px] text-slate-400 ml-auto">
+          <span>Synced: {lastSync.toLocaleTimeString()}</span>
+          <button
+            onClick={loadDashboardData}
+            className="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold transition-colors"
+          >
+            ↻ Refresh
+          </button>
+        </div>
+      </div>
 
-        <div className="flex items-center gap-3">
-          <Link
-            to="/vessel-matcher"
-            className="px-4 py-2 rounded-xl bg-ocean-600 hover:bg-ocean-500 text-white font-bold text-xs font-mono transition-colors shadow-md flex items-center gap-1.5"
-          >
-            <span>New Feasibility Check</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
-      </div>
+      {/* Top Banner: SIH 2026 Executive Header */}
+      <div className="p-4 sm:p-6 rounded-3xl bg-gradient-to-r from-navy-900 via-slate-900 to-navy-950 border border-ocean-500/25 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2 text-xs font-mono font-bold text-ocean-400 uppercase tracking-widest">
+            <Anchor className="w-3.5 h-3.5 text-cyan-400" />
+            <span>SAIL BULK CARGO LOGISTICS CONTROL TOWER</span>
+          </div>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white tracking-tight mt-1">
+            Executive Maritime Dashboard
+          </h1>
+          <p className="text-xs text-slate-400 mt-1">
+            Overseas Procurement Corridors (Australia / Indonesia / S. Africa) → India East Coast
+          </p>
+        </div>
+
+        <div className="flex items-center gap-3 w-full sm:w-auto">
+          <Link
+            to="/vessel-matcher"
+            className="w-full sm:w-auto justify-center px-4 py-2 rounded-xl bg-ocean-600 hover:bg-ocean-500 text-white font-bold text-xs font-mono transition-colors shadow-md flex items-center gap-1.5"
+          >
+            <span>New Feasibility Check</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+      </div>
 
       {/* 8 Mandatory Dashboard KPIs */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

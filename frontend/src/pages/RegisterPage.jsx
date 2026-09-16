@@ -135,10 +135,10 @@ export const RegisterPage = () => {
     },
     {
       id: 'Viewer',
-      label: 'Executive Viewer',
+      label: 'Normal User / Viewer',
       icon: ViewIcon,
-      color: 'text-slate-400 border-slate-600/30 bg-slate-700/10',
-      desc: 'Read-only presentations, KPIs & fleet reports'
+      color: 'text-teal-400 border-teal-500/30 bg-teal-500/10',
+      desc: 'Standard read-only access, analytics reports & fleet directories'
     }
   ];
 
@@ -188,9 +188,9 @@ export const RegisterPage = () => {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto space-y-4">
+    <div className="w-full max-w-2xl mx-auto space-y-4 px-2 sm:px-0">
       {/* Top Real-Time MongoDB Telemetry Bar */}
-      <div className="flex items-center justify-between px-4 py-2.5 rounded-2xl bg-slate-900/80 backdrop-blur-md border border-slate-700/60 shadow-lg text-xs">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-3 sm:px-4 py-2.5 rounded-2xl bg-slate-900/80 backdrop-blur-md border border-slate-700/60 shadow-lg text-xs gap-2">
         <div className="flex items-center gap-2.5">
           <span className="relative flex h-2.5 w-2.5">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -203,7 +203,7 @@ export const RegisterPage = () => {
           </span>
         </div>
 
-        <div className="flex items-center gap-2 font-mono text-[11px] text-slate-400">
+        <div className="flex items-center gap-2 font-mono text-[11px] text-slate-400 self-end sm:self-auto">
           <span className="bg-slate-800/80 px-2 py-0.5 rounded-md border border-slate-700 text-slate-300">
             Current: {dbStatus.userCount} Officers Stored
           </span>
@@ -211,7 +211,7 @@ export const RegisterPage = () => {
       </div>
 
       {/* Main Glass Form Card */}
-      <div className="p-7 sm:p-8 rounded-3xl bg-slate-900/85 backdrop-blur-xl border border-slate-700/70 shadow-2xl space-y-6 text-slate-100">
+      <div className="p-4 sm:p-8 rounded-3xl bg-slate-900/85 backdrop-blur-xl border border-slate-700/70 shadow-2xl space-y-6 text-slate-100">
         
         {/* Navigation Tabs: Sign In / Register */}
         <div className="flex items-center justify-center p-1 rounded-2xl bg-slate-950/70 border border-slate-800/80 font-mono text-xs">

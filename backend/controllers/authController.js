@@ -38,7 +38,7 @@ const register = async (req, res, next) => {
     }
 
     const normalizedEmail = email.trim().toLowerCase();
-    const validRoles = ['Admin', 'Procurement Manager', 'Logistics Manager', 'Analyst', 'Viewer'];
+    const validRoles = ['Admin', 'Procurement Manager', 'Logistics Manager', 'Analyst', 'Viewer', 'Normal User'];
     const assignedRole = validRoles.includes(role) ? role : 'Logistics Manager';
     const org = organization ? organization.trim() : 'Steel Authority of India Limited (SAIL)';
     const dept = department ? department.trim() : 'Bulk Raw Materials Logistics';

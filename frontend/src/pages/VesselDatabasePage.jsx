@@ -42,13 +42,13 @@ export const VesselDatabasePage = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="p-6 rounded-3xl bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950 border border-sky-500/25 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="p-4 sm:p-6 rounded-3xl bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950 border border-sky-500/25 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 text-xs font-mono font-bold text-sky-600 dark:text-sky-400 uppercase tracking-widest">
             <Ship className="w-4 h-4 text-cyan-500 dark:text-cyan-400" />
             <span>BULK CARRIER FLEET INTELLIGENCE</span>
           </div>
-          <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight mt-1">
+          <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight mt-1">
             Vessel Classes & Live Fleet Telemetry
           </h1>
           <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
@@ -56,7 +56,7 @@ export const VesselDatabasePage = () => {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs font-mono text-emerald-700 dark:text-emerald-400 font-bold">
             <span className="w-2 h-2 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-ping" />
             <span>LIVE AIS STREAMING</span>
@@ -156,7 +156,7 @@ export const VesselDatabasePage = () => {
                 </div>
 
                 {/* Live GPS Telemetry Bar */}
-                <div className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800/80 grid grid-cols-3 gap-2 text-[11px] font-mono text-slate-700 dark:text-slate-300">
+                <div className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800/80 grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px] font-mono text-slate-700 dark:text-slate-300">
                   <div>
                     <span className="text-[9px] text-slate-400 dark:text-slate-500 uppercase block">Live GPS</span>
                     <span className="text-cyan-600 dark:text-cyan-300 font-bold">

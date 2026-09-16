@@ -82,17 +82,17 @@ export const PresentationPage = () => {
   return (
     <div className="fixed inset-0 z-50 bg-slate-900 text-slate-900 flex flex-col justify-between overflow-hidden p-2 sm:p-4 selection:bg-ocean-500 selection:text-white">
       {/* Top Deck Navigation Bar */}
-      <header className="flex items-center justify-between px-4 py-2 rounded-xl bg-slate-950/90 text-white border border-slate-800 shadow-md relative z-20 mb-2">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-slate-900 p-1 flex items-center justify-center border border-ocean-500/40 shadow-md">
+      <header className="flex flex-wrap items-center justify-between px-3 sm:px-4 py-2 rounded-xl bg-slate-950/90 text-white border border-slate-800 shadow-md relative z-20 mb-2 gap-2">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="w-8 h-8 rounded-lg bg-slate-900 p-1 flex items-center justify-center border border-ocean-500/40 shadow-md shrink-0">
             <img src="/app-logo.png" alt="Logo" className="w-full h-full object-contain" />
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <span className="font-extrabold text-sm font-mono tracking-tight text-white">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <span className="font-extrabold text-xs sm:text-sm font-mono tracking-tight text-white truncate">
                 SIH 2026 • POSEIDON-X
               </span>
-              <span className="px-2 py-0.5 rounded bg-ocean-500/20 text-cyan-300 font-mono text-[10px] font-bold border border-ocean-500/30">
+              <span className="px-1.5 sm:px-2 py-0.5 rounded bg-ocean-500/20 text-cyan-300 font-mono text-[9px] sm:text-[10px] font-bold border border-ocean-500/30">
                 PS: 26006
               </span>
             </div>
@@ -100,35 +100,37 @@ export const PresentationPage = () => {
         </div>
 
         {/* Action Controls */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2">
           <button
             onClick={toggleFullscreen}
-            className="p-1.5 px-3 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-mono border border-slate-700 transition-colors flex items-center gap-1.5"
+            className="p-1.5 sm:px-3 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-mono border border-slate-700 transition-colors flex items-center gap-1.5"
+            title="Toggle Fullscreen"
           >
             {isFullscreen ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
-            <span className="hidden sm:inline">{isFullscreen ? 'Exit Fullscreen' : 'Fullscreen (F)'}</span>
+            <span className="hidden sm:inline">{isFullscreen ? 'Exit' : 'Fullscreen'}</span>
           </button>
 
           <Link
             to="/dashboard"
-            className="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-mono border border-slate-700 transition-colors"
+            className="px-2.5 sm:px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-mono border border-slate-700 transition-colors"
           >
-            Exit Deck
+            Exit
           </Link>
 
           <button
             onClick={() => navigate('/vessel-matcher')}
-            className="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 text-slate-950 font-bold text-xs font-mono transition-all shadow flex items-center gap-1.5"
+            className="px-2.5 sm:px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 text-slate-950 font-bold text-xs font-mono transition-all shadow flex items-center gap-1.5"
           >
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Interactive App</span>
+            <span className="hidden sm:inline">Interactive App</span>
+            <span className="sm:hidden">App</span>
           </button>
         </div>
       </header>
 
-      {/* Slide Presentation Canvas (16:9 Presentation Format) */}
-      <main className="flex-1 flex items-center justify-center relative z-10 w-full max-w-7xl mx-auto overflow-hidden">
-        <div className="w-full aspect-[16/9] max-h-[85vh] bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col justify-between border border-slate-300 text-slate-900 relative">
+      {/* Slide Presentation Canvas (Adaptive aspect ratio) */}
+      <main className="flex-1 flex items-center justify-center relative z-10 w-full max-w-7xl mx-auto overflow-y-auto">
+        <div className="w-full aspect-auto md:aspect-[16/9] min-h-[460px] md:max-h-[85vh] bg-white rounded-2xl shadow-2xl overflow-y-auto flex flex-col justify-between border border-slate-300 text-slate-900 relative">
           
           <AnimatePresence mode="wait">
             {/* ========================================================= */}

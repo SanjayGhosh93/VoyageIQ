@@ -1,6 +1,6 @@
 // frontend/src/layouts/MainLayout.jsx
 import React, { useState, useEffect, useRef } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { Sidebar } from '../components/Sidebar';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
@@ -8,7 +8,14 @@ import { SihDemoModal } from '../components/SihDemoModal';
 
 export const MainLayout = () => {
   const [demoOpen, setDemoOpen] = useState(false);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const location = useLocation();
   const videoRef = useRef(null);
+
+  // Close mobile sidebar automatically on navigation
+  useEffect(() => {
+    setMobileSidebarOpen(false);
+  }, [location.pathname]);
 
   useEffect(() => {
     if (videoRef.current) {
@@ -24,7 +31,7 @@ export const MainLayout = () => {
   }, []);
 
   return (
-    <div className="relative flex flex-col h-screen w-screen overflow-hidden text-slate-900 dark:text-slate-100 transition-colors duration-300">
+    <div className="relative flex flex-col h-screen h-[100dvh] w-screen max-w-full overflow-hidden text-slate-900 dark:text-slate-100 transition-colors duration-300">
       {/* Live Full Video Background running behind the whole website */}
       <div className="fixed inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
         <video
@@ -50,14 +57,22 @@ export const MainLayout = () => {
 
       {/* Main Workspace Area (Sidebar + Scrollable Main Content) */}
       <div className="flex-1 flex min-h-0 overflow-hidden relative z-10">
-        {/* Sidebar */}
-        <Sidebar onOpenDemo={() => setDemoOpen(true)} />
+        {/* Responsive Sidebar (Static on desktop, off-canvas drawer on tablet & mobile) */}
+        <Sidebar
+          isOpenMobile={mobileSidebarOpen}
+          onCloseMobile={() => setMobileSidebarOpen(false)}
+          onOpenDemo={() => setDemoOpen(true)}
+        />
 
         {/* Content Column */}
         <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-          <Navbar onOpenDemo={() => setDemoOpen(true)} />
+          <Navbar
+            onOpenDemo={() => setDemoOpen(true)}
+            onToggleMobileSidebar={() => setMobileSidebarOpen((prev) => !prev)}
+            isMobileSidebarOpen={mobileSidebarOpen}
+          />
 
-          <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 scroll-smooth bg-transparent transition-colors">
+          <main className="flex-1 overflow-y-auto p-3 sm:p-5 lg:p-8 scroll-smooth bg-transparent transition-colors">
             <div className="max-w-7xl mx-auto space-y-6">
               <Outlet context={{ openDemo: () => setDemoOpen(true) }} />
             </div>
@@ -77,4 +92,5 @@ export const MainLayout = () => {
 };
 
 export default MainLayout;
+
 
