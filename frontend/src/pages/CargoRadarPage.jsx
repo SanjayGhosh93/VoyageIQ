@@ -236,25 +236,33 @@ const CHOKEPOINTS = [
 ];
 
 const VESSEL_TYPES = [
-  { id: 'container', label: 'Container', color: '#22d3ee', speed: 18 },
-  { id: 'tanker', label: 'Tanker', color: '#f59e0b', speed: 14 },
-  { id: 'bulk', label: 'Bulk carrier', color: '#a78bfa', speed: 13 },
-  { id: 'lng', label: 'LNG', color: '#34d399', speed: 16 },
+  { id: 'cargo', label: 'Cargo', color: '#22d3ee' },
+  { id: 'tanker', label: 'Tanker', color: '#f59e0b' },
+  { id: 'passenger', label: 'Passenger', color: '#a78bfa' },
+  { id: 'fishing', label: 'Fishing', color: '#34d399' },
+  { id: 'towing', label: 'Towing', color: '#fb923c' },
+  { id: 'tug', label: 'Tug', color: '#f97316' },
+  { id: 'dredging', label: 'Dredging', color: '#a16207' },
+  { id: 'diving', label: 'Diving', color: '#14b8a6' },
+  { id: 'military', label: 'Military', color: '#ef4444' },
+  { id: 'sailing', label: 'Sailing', color: '#3b82f6' },
+  { id: 'pleasure', label: 'Pleasure craft', color: '#8b5cf6' },
+  { id: 'high_speed', label: 'High-speed craft', color: '#ec4899' },
+  { id: 'pilot', label: 'Pilot', color: '#eab308' },
+  { id: 'search_rescue', label: 'Search & rescue', color: '#f43f5e' },
+  { id: 'port_service', label: 'Port / service', color: '#06b6d4' },
+  { id: 'special', label: 'Special', color: '#f472b6' },
+  { id: 'wing_in_ground', label: 'Wing-in-ground', color: '#6366f1' },
+  { id: 'other', label: 'Other / Unknown', color: '#94a3b8' },
 ];
 
-const SHIP_PAIRS = [
-  ['mumbai', 'rotterdam'], ['singapore', 'rotterdam'], ['shanghai', 'rotterdam'],
-  ['tokyo', 'los-angeles'], ['los-angeles', 'shanghai'], ['new-york', 'panama'],
-  ['panama', 'los-angeles'], ['mumbai', 'singapore'], ['dubai', 'singapore'],
-  ['jebel-ali', 'rotterdam'], ['santos', 'rotterdam'], ['cape-town', 'rotterdam'],
-  ['durban', 'singapore'], ['mombasa', 'mumbai'], ['perth', 'singapore'],
-  ['sydney', 'singapore'], ['melbourne', 'singapore'], ['hong-kong', 'busan'],
-  ['busan', 'tokyo'], ['chennai', 'singapore'], ['colombo', 'singapore'],
-  ['hamburg', 'new-york'], ['antwerp', 'new-york'], ['london', 'new-york'],
-  ['lagos', 'rotterdam'],
-];
+const AIS_CORRIDOR_KM = 100;
 
 const WORLD_CENTER = [18, 20];
+
+// AISStream is connected server-side. The frontend only calls your own API.
+const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5000/api';
+const AIS_POLL_MS = 8000;
 
 function haversineNm(a, b) {
   const R = 3440.065;
@@ -265,6 +273,42 @@ function haversineNm(a, b) {
   const dLng = toRad(b[1] - a[1]);
   const h = Math.sin(dLat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2;
   return 2 * R * Math.asin(Math.min(1, Math.sqrt(h)));
+}
+
+function distanceToRouteKm(point, routePath) {
+  if (!Array.isArray(point) || point.length < 2 || !Array.isArray(routePath) || routePath.length < 2) {
+    return Infinity;
+  }
+
+  const lat = Number(point[0]);
+  const lng = Number(point[1]);
+  if (!Number.isFinite(lat) || !Number.isFinite(lng)) return Infinity;
+
+  const R = 6371;
+  const lat0 = (lat * Math.PI) / 180;
+  const cosLat = Math.max(0.15, Math.cos(lat0));
+
+  const project = (p) => ({
+    x: ((Number(p[1]) - lng) * Math.PI / 180) * R * cosLat,
+    y: ((Number(p[0]) - lat) * Math.PI / 180) * R,
+  });
+
+  let minimum = Infinity;
+
+  for (let i = 0; i < routePath.length - 1; i += 1) {
+    const a = project(routePath[i]);
+    const b = project(routePath[i + 1]);
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
+    const length2 = dx * dx + dy * dy;
+    let t = length2 > 0 ? (-(a.x * dx + a.y * dy)) / length2 : 0;
+    t = Math.max(0, Math.min(1, t));
+    const px = a.x + t * dx;
+    const py = a.y + t * dy;
+    minimum = Math.min(minimum, Math.hypot(px, py));
+  }
+
+  return minimum;
 }
 
 function normalizeLng(lng) {
@@ -332,6 +376,103 @@ function calculateMaritimeRoute(origin, destination) {
   }
 }
 
+const AIS_DESTINATION_NAMES = {
+  'SYBAN': 'Baniyas',
+  'SY BAN': 'Baniyas',
+  'EGPSD': 'Port Said',
+  'EG PSD': 'Port Said',
+  'TRDYL': 'Dikili',
+  'TR DYL': 'Dikili',
+  'TRALI': 'Aliaga',
+  'TR ALI': 'Aliaga',
+  'BGVAR': 'Varna',
+  'BG VAR': 'Varna',
+  'SGSIN': 'Singapore',
+  'SG SIN': 'Singapore',
+  'INNSA': 'Nhava Sheva / JNPT',
+  'IN NSA': 'Nhava Sheva / JNPT',
+  'INMUN': 'Mumbai',
+  'IN MUN': 'Mumbai',
+  'INMUNB': 'Mumbai',
+  'INMAA': 'Chennai',
+  'IN MAA': 'Chennai',
+  'INMUN': 'Mumbai',
+  'CNSHA': 'Shanghai',
+  'CN SHA': 'Shanghai',
+  'HKHKG': 'Hong Kong',
+  'HK HKG': 'Hong Kong',
+  'USLAX': 'Los Angeles / Long Beach',
+  'US LAX': 'Los Angeles / Long Beach',
+  'USNYC': 'New York / Newark',
+  'US NYC': 'New York / Newark',
+  'US HOU': 'Houston',
+  'USHOU': 'Houston',
+  'CAVAN': 'Vancouver',
+  'CA VAN': 'Vancouver',
+  'PAPAN': 'Panama',
+  'PA PAN': 'Panama',
+  'CLVAP': 'Valparaiso',
+  'CL VAP': 'Valparaiso',
+  'AUMEL': 'Melbourne',
+  'AU MEL': 'Melbourne',
+  'AUPER': 'Perth',
+  'AU PER': 'Perth',
+  'NZAKL': 'Auckland',
+  'NZ AKL': 'Auckland',
+  'LKCMB': 'Colombo',
+  'LK CMB': 'Colombo',
+  'MYKLA': 'Port Klang',
+  'MY KLA': 'Port Klang',
+  'IDJKT': 'Jakarta',
+  'ID JKT': 'Jakarta',
+};
+
+function normalizeDestinationCode(value) {
+  return String(value || '')
+    .toUpperCase()
+    .replace(/[>\/|]+/g, ' ')
+    .replace(/[^A-Z0-9 ]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function formatAISDestination(value) {
+  const raw = String(value || '').trim();
+  if (!raw) return 'Destination unavailable';
+
+  // AIS destinations can contain voyage text such as "EG PSD > SY BAN".
+  // Use the final destination token when it contains a UN/LOCODE.
+  const normalized = normalizeDestinationCode(raw);
+  const compact = normalized.replace(/\s/g, '');
+
+  if (AIS_DESTINATION_NAMES[normalized]) return AIS_DESTINATION_NAMES[normalized];
+  if (AIS_DESTINATION_NAMES[compact]) return AIS_DESTINATION_NAMES[compact];
+
+  const tokens = normalized.split(' ');
+  for (let i = tokens.length - 1; i >= 1; i -= 1) {
+    const candidate = `${tokens[i - 1]} ${tokens[i]}`;
+    const candidateCompact = candidate.replace(/\s/g, '');
+    if (AIS_DESTINATION_NAMES[candidate]) return AIS_DESTINATION_NAMES[candidate];
+    if (AIS_DESTINATION_NAMES[candidateCompact]) return AIS_DESTINATION_NAMES[candidateCompact];
+  }
+
+  // If the final token is a 5-character UN/LOCODE, show the code only as a
+  // fallback rather than pretending we know a port name we cannot verify.
+  const lastFive = tokens[tokens.length - 1];
+  if (/^[A-Z]{2}[A-Z0-9]{3}$/.test(lastFive)) return lastFive;
+
+  return raw;
+}
+
+function knotsToKmh(knots) {
+  const value = Number(knots);
+  return Number.isFinite(value) ? value * 1.852 : 0;
+}
+
+function formatShipSpeedKmh(knots) {
+  return `${knotsToKmh(knots).toFixed(1)} km/h`;
+}
+
 function createShipIcon(color, heading = 0) {
   return L.divIcon({
     className: 'vessel-marker-wrap',
@@ -359,38 +500,6 @@ function getShipIcon(color, heading) {
     SHIP_ICON_CACHE.set(key, icon);
   }
   return icon;
-}
-
-function interpolatePath(path, progress) {
-  if (!path?.length) return null;
-  if (path.length === 1) return { point: path[0], heading: 0 };
-  const segmentLengths = [];
-  let total = 0;
-  for (let i = 1; i < path.length; i += 1) {
-    const d = haversineNm(path[i - 1], path[i]);
-    segmentLengths.push(d);
-    total += d;
-  }
-  const target = Math.max(0, Math.min(1, progress)) * total;
-  let accumulated = 0;
-  for (let i = 1; i < path.length; i += 1) {
-    const length = segmentLengths[i - 1];
-    if (accumulated + length >= target) {
-      const local = length ? (target - accumulated) / length : 0;
-      const a = path[i - 1];
-      const b = path[i];
-      const point = interpolate(a, b, local);
-      const lat1 = (a[0] * Math.PI) / 180;
-      const lat2 = (b[0] * Math.PI) / 180;
-      const dLng = ((unwrapLng(b[1], a[1]) - a[1]) * Math.PI) / 180;
-      const y = Math.sin(dLng) * Math.cos(lat2);
-      const x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLng);
-      const heading = (((Math.atan2(y, x) * 180) / Math.PI) + 360) % 360;
-      return { point: [point[0], normalizeLng(point[1])], heading };
-    }
-    accumulated += length;
-  }
-  return { point: path[path.length - 1], heading: 0 };
 }
 
 function MapViewport({ route }) {
@@ -528,7 +637,7 @@ function RadarScope({ vessels, selectedShipId, onSelect }) {
               radius = Math.min(43, 8 + Math.sqrt(Math.max(distance, 1)) * 0.65);
             }
           } else {
-            angle = (index * 47 + ship.progress * 80) % 360;
+            angle = (index * 47 + (Number(ship.heading) || 0)) % 360;
             radius = 20 + ((index * 17) % 42);
           }
           const x = 50 + Math.cos(((angle - 90) * Math.PI) / 180) * radius;
@@ -549,6 +658,94 @@ function RadarScope({ vessels, selectedShipId, onSelect }) {
     </div>
   );
 }
+
+const LiveVesselMarker = React.memo(function LiveVesselMarker({
+  ship,
+  selected,
+  markerRef,
+  onSelect,
+  weather,
+  marine,
+  environmentLoading,
+  environmentError,
+  formatValue,
+  weatherLabel,
+}) {
+  return (
+    <Marker
+      ref={markerRef}
+      position={ship.point}
+      icon={getShipIcon(ship.color, ship.heading)}
+      zIndexOffset={selected ? 1000 : 0}
+      eventHandlers={{
+        click: (e) => {
+          L.DomEvent.stopPropagation(e.originalEvent);
+          onSelect(ship.id);
+          e.target.openPopup();
+        },
+      }}
+    >
+      <Popup
+        className="popup-dark vessel-detail-popup"
+        closeButton
+        autoPan
+        autoClose
+        closeOnClick
+        eventHandlers={{
+          remove: () => onSelect(null),
+        }}
+      >
+        <div className="vessel-popup">
+          <div className="vessel-popup-kicker">AISSTREAM · LIVE AIS</div>
+          <div className="vessel-popup-title">{ship.name || ship.id}</div>
+          <div className="vessel-popup-route">
+            MMSI {ship.mmsi || '—'} · Destination <strong>{ship.destination || '—'}</strong>
+          </div>
+          <div className="vessel-popup-grid">
+            <div><b>{ship.point[0].toFixed(3)}°</b><span>LAT</span></div>
+            <div><b>{ship.point[1].toFixed(3)}°</b><span>LNG</span></div>
+            <div><b>{formatShipSpeedKmh(ship.speed)}</b><span>SPEED</span></div>
+            <div><b>{Math.round(ship.heading)}°</b><span>HDG · {directionLabel(ship.heading)}</span></div>
+          </div>
+          {selected && (
+            <div className="vessel-popup-weather">
+              <b>
+                {environmentLoading ? 'Loading…' : weather ? weatherLabel(weather.current?.weather_code) : environmentError || '—'}
+              </b>
+              <span>
+                {formatValue(weather?.current?.temperature_2m, 1, '°C')} · Wind{' '}
+                {formatValue(weather?.current?.wind_speed_10m, 1, ' kn')}
+              </span>
+              <span>
+                Waves {formatValue(marine?.current?.wave_height, 1, ' m')} · SST{' '}
+                {formatValue(marine?.current?.sea_surface_temperature, 1, '°C')}
+              </span>
+            </div>
+          )}
+          <div className="vessel-popup-hint">Click map or X to clear gold route</div>
+        </div>
+      </Popup>
+    </Marker>
+  );
+}, (a, b) => {
+  const x = a.ship;
+  const y = b.ship;
+  return (
+    a.selected === b.selected &&
+    x.id === y.id &&
+    x.lat === y.lat &&
+    x.lng === y.lng &&
+    x.heading === y.heading &&
+    x.speed === y.speed &&
+    x.color === y.color &&
+    x.name === y.name &&
+    x.destination === y.destination &&
+    a.weather === b.weather &&
+    a.marine === b.marine &&
+    a.environmentLoading === b.environmentLoading &&
+    a.environmentError === b.environmentError
+  );
+});
 
 export default function RouteRadarPage() {
   const [mapMode, setMapMode] = useState('satellite'); // 'satellite' | 'ocean' | 'standard'
@@ -572,8 +769,6 @@ export default function RouteRadarPage() {
   const [selectedPortId, setSelectedPortId] = useState('mumbai');
 
   const routeCache = useRef(new Map());
-  const rafRef = useRef(null);
-  const lastFrameRef = useRef(performance.now());
   const markerRefs = useRef(new Map());
   const markerRefCallbacks = useRef(new Map());
   const mapInstanceRef = useRef(null);
@@ -631,82 +826,157 @@ export default function RouteRadarPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Configure the backend AIS filter from the currently calculated maritime route,
+  // then read the already-filtered vessel snapshot at a modest interval.
   useEffect(() => {
-    const generated = [];
-    SHIP_PAIRS.forEach(([fromId, toId], index) => {
-      const result = getRoute(fromId, toId);
-      if (!result?.path?.length) return;
-      const vesselType = VESSEL_TYPES[index % VESSEL_TYPES.length];
-      generated.push({
-        id: `OCA-SIM-${String(index + 1).padStart(3, '0')}`,
-        fromId,
-        toId,
-        type: vesselType.id,
-        typeLabel: vesselType.label,
-        color: vesselType.color,
-        speed: vesselType.speed,
-        path: result.path,
-        passages: result.passages || [],
-        progress: (index * 0.137) % 1,
-        direction: 1,
-      });
-    });
-    setShips(generated);
-  }, [getRoute]);
+    let active = true;
+    let timer = null;
+    let inFlight = false;
+    let version = null;
 
-  useEffect(() => {
-    const tick = (now) => {
-      const deltaSeconds = Math.min(0.5, (now - lastFrameRef.current) / 1000);
-      lastFrameRef.current = now;
-      if (!paused) {
-        setShips((current) =>
-          current.map((ship) => {
-            const distanceNm = routeDistance(ship.path);
-            const distanceMovedNm = (ship.speed * deltaSeconds) / 3600;
-            const progressChange = distanceMovedNm / Math.max(distanceNm, 1);
-            let progress = ship.progress + progressChange * ship.direction;
-            let direction = ship.direction;
-            if (progress >= 1) {
-              progress = 1;
-              direction = -1;
-            }
-            if (progress <= 0) {
-              progress = 0;
-              direction = 1;
-            }
-            return { ...ship, progress, direction };
-          }),
-        );
-        setLastUpdate(new Date());
+    const configureRouteArea = async () => {
+      if (!route?.path?.length || route.path.length < 2) {
+        setShips([]);
+        return false;
       }
-      rafRef.current = requestAnimationFrame(tick);
+
+      try {
+        const backendRoute = route.path
+          .map((point) => {
+            if (!Array.isArray(point) || point.length < 2) return null;
+            const lat = Number(point[0]);
+            const lng = Number(point[1]);
+            if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+            if (lat < -90 || lat > 90 || lng < -180 || lng > 180) return null;
+            return { lat, lng };
+          })
+          .filter(Boolean);
+
+        if (backendRoute.length < 2) {
+          throw new Error('Calculated route does not contain enough valid coordinates.');
+        }
+
+        const response = await fetch(`${API_BASE}/ais/route-area`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ route: backendRoute, corridorKm: AIS_CORRIDOR_KM }),
+        });
+
+        if (!response.ok) {
+          let message = `AIS route-area API HTTP ${response.status}`;
+          try {
+            const errorData = await response.json();
+            if (errorData?.message) message += `: ${errorData.message}`;
+          } catch {}
+          throw new Error(message);
+        }
+
+        const result = await response.json();
+        if (!result?.success) throw new Error(result?.message || 'AIS route-area configuration failed.');
+        version = null;
+        return true;
+      } catch (error) {
+        if (active) {
+          setShips([]);
+          console.error('AIS route-area configuration failed:', error);
+        }
+        return false;
+      }
     };
-    rafRef.current = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(rafRef.current);
-  }, [paused]);
+
+    const loadAISVessels = async () => {
+      if (!active || paused || inFlight || document.visibilityState === 'hidden') return;
+      inFlight = true;
+      const controller = new AbortController();
+      try {
+        const query = version == null ? '' : `?since=${encodeURIComponent(version)}`;
+        const response = await fetch(`${API_BASE}/ais/vessels${query}`, {
+          signal: controller.signal,
+          cache: 'no-store',
+        });
+        if (!response.ok) throw new Error(`AIS API HTTP ${response.status}`);
+
+        const data = await response.json();
+        if (!active || paused) return;
+
+        if (data?.version != null) version = data.version;
+        if (data?.changed === false) return;
+
+        const nextShips = (Array.isArray(data?.vessels) ? data.vessels : [])
+          .filter((ship) => Number.isFinite(Number(ship?.lat)) && Number.isFinite(Number(ship?.lng)))
+          .map((ship) => ({
+            ...ship,
+            id: ship.id || ship.name || String(ship.mmsi),
+            point: [Number(ship.lat), Number(ship.lng)],
+            speed: Number.isFinite(Number(ship.speed)) ? Number(ship.speed) : 0,
+            heading: Number.isFinite(Number(ship.heading)) ? Number(ship.heading) : 0,
+            type: ship.type || 'other',
+            typeLabel: ship.typeLabel || 'Other',
+            color: ship.color || '#22d3ee',
+            name: ship.name || ship.id || `MMSI ${ship.mmsi}`,
+            destination: formatAISDestination(ship.destination),
+              destinationRaw: ship.destination || '',
+          }));
+
+        setShips(nextShips);
+        setLastUpdate(new Date());
+      } catch (error) {
+        if (error.name !== 'AbortError' && active) console.error('AIS vessel feed failed:', error);
+      } finally {
+        inFlight = false;
+        controller.abort();
+      }
+    };
+
+    const startAIS = async () => {
+      const configured = await configureRouteArea();
+      if (!configured || !active || paused) return;
+      await loadAISVessels();
+      timer = window.setInterval(loadAISVessels, AIS_POLL_MS);
+    };
+
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') loadAISVessels();
+    };
+
+    document.addEventListener('visibilitychange', handleVisibility);
+    startAIS();
+
+    return () => {
+      active = false;
+      document.removeEventListener('visibilitychange', handleVisibility);
+      if (timer) window.clearInterval(timer);
+      timer = null;
+    };
+  }, [route, paused]);
 
   const displayedShips = useMemo(() => {
     const q = search.trim().toLowerCase();
+
     return ships.filter((ship) => {
+      const lat = Number(ship.lat);
+      const lng = Number(ship.lng);
+      if (!Number.isFinite(lat) || !Number.isFinite(lng)) return false;
+
+      // Backend is the single source of truth for route geometry. This avoids
+      // recalculating point-to-line distance for every vessel on every render.
+      const backendDistance = Number(ship.distanceToRouteKm);
+      if (!Number.isFinite(backendDistance) || backendDistance > AIS_CORRIDOR_KM) return false;
+
       const matchesSearch =
         !q ||
-        ship.id.toLowerCase().includes(q) ||
-        PORT_BY_ID[ship.fromId]?.name.toLowerCase().includes(q) ||
-        PORT_BY_ID[ship.toId]?.name.toLowerCase().includes(q);
+        String(ship.id || '').toLowerCase().includes(q) ||
+        String(ship.name || '').toLowerCase().includes(q) ||
+        String(ship.mmsi || '').toLowerCase().includes(q) ||
+        String(ship.destination || '').toLowerCase().includes(q) ||
+        String(ship.callSign || '').toLowerCase().includes(q);
+
       return matchesSearch && (selectedType === 'all' || ship.type === selectedType);
     });
-  }, [search, selectedType, ships]);
+  }, [route, search, selectedType, ships]);
 
-  const livePositions = useMemo(
-    () =>
-      displayedShips
-        .map((ship) => {
-          const position = interpolatePath(ship.path, ship.progress);
-          return position ? { ...ship, ...position } : null;
-        })
-        .filter(Boolean),
-    [displayedShips],
-  );
+  // AIS positions are already live coordinates. No simulated route interpolation.
+  const livePositions = useMemo(() => displayedShips, [displayedShips]);
 
   const origin = PORT_BY_ID[originId];
   const destination = PORT_BY_ID[destinationId];
@@ -1207,9 +1477,9 @@ export default function RouteRadarPage() {
                 <div className="eyebrow">OCEANCHARTER AI</div>
                 <div className="monitor-title">ROUTE RADAR</div>
                 <div className="monitor-subtitle">GLOBAL MARITIME MONITOR</div>
-                <div className="reference-note">ROUTES: EUROSTAT MARNET · WEATHER: OPEN-METEO · DISTANCE: KM</div>
+                <div className="reference-note">AIS: AISSTREAM · ROUTES: EUROSTAT MARNET · WEATHER: OPEN-METEO · DISTANCE: KM</div>
               </div>
-              <div className="status-pill"><span className="status-dot" /> SIM + LIVE WX</div>
+              <div className="status-pill"><span className="status-dot" /> LIVE AIS + LIVE WX</div>
             </div>
 
             <section className="section">
@@ -1219,7 +1489,7 @@ export default function RouteRadarPage() {
               </div>
               <div className="search-box">
                 <Search size={13} />
-                <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Vessel ID or port..." />
+                <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Vessel name, MMSI or destination..." />
                 {search && <X size={13} style={{ cursor: 'pointer' }} onClick={() => setSearch('')} />}
               </div>
               <div className="filter-row">
@@ -1292,7 +1562,7 @@ export default function RouteRadarPage() {
                 <div className="section-count">{formatClock(lastUpdate)}</div>
               </div>
               <div className="stats-grid">
-                <div className="stat-card"><div className="stat-icon"><Ship size={14} /></div><div><div className="stat-number">{ships.length}</div><div className="stat-label">Sim vessels</div></div></div>
+                <div className="stat-card"><div className="stat-icon"><Ship size={14} /></div><div><div className="stat-number">{ships.length}</div><div className="stat-label">Live vessels</div></div></div>
                 <div className="stat-card"><div className="stat-icon"><Anchor size={14} /></div><div><div className="stat-number">{PORTS.length}</div><div className="stat-label">Ports</div></div></div>
                 <div className="stat-card"><div className="stat-icon"><RouteIcon size={14} /></div><div><div className="stat-number">MARNET</div><div className="stat-label">Sea network</div></div></div>
                 <div className="stat-card"><div className="stat-icon"><CircleDot size={14} /></div><div><div className="stat-number">{CHOKEPOINTS.length}</div><div className="stat-label">Chokepoints</div></div></div>
@@ -1302,7 +1572,7 @@ export default function RouteRadarPage() {
             <section className="section">
               <div className="section-head">
                 <div className="section-title"><Filter size={12} /> Tracked vessels</div>
-                <div className="section-count">SIMULATED</div>
+                <div className="section-count">LIVE AIS</div>
               </div>
               <div className="ship-list">
                 {displayedShips.slice(0, 10).map((ship) => (
@@ -1316,8 +1586,12 @@ export default function RouteRadarPage() {
                   >
                     <span className="ship-dot" style={{ color: ship.color, background: ship.color }} />
                     <div>
-                      <div className="ship-name">{ship.id}</div>
-                      <div className="ship-route">{PORT_BY_ID[ship.fromId].name} → {PORT_BY_ID[ship.toId].name}</div>
+                      <div className="ship-name">{ship.name || ship.id}</div>
+                      <div className="ship-route">
+                        {ship.destination && ship.destination !== 'Destination unavailable'
+                          ? `→ ${ship.destination}`
+                          : `MMSI ${ship.mmsi || '—'}`}
+                      </div>
                     </div>
                     <div className="ship-type">{ship.typeLabel}</div>
                   </div>
@@ -1371,6 +1645,7 @@ export default function RouteRadarPage() {
             minZoom={2}
             maxZoom={12}
             worldCopyJump
+            preferCanvas
             zoomControl
             whenReady={(e) => {
               mapInstanceRef.current = e.target;
@@ -1468,70 +1743,29 @@ export default function RouteRadarPage() {
               </CircleMarker>
             ))}
 
-            {selectedShip?.path?.length > 1 && (
-              <>
-                <Polyline positions={selectedShip.path} pathOptions={{ color: '#020617', weight: 8, opacity: 0.78 }} />
-                <Polyline positions={selectedShip.path} pathOptions={{ color: '#facc15', weight: 3, opacity: 0.95, dashArray: '10 7' }} />
-                <Marker position={selectedShip.point} icon={createSelectionRingIcon(selectedShip.heading)} interactive={false} zIndexOffset={-100} />
-              </>
+            {selectedShip?.point && (
+              <Marker
+                position={selectedShip.point}
+                icon={createSelectionRingIcon(selectedShip.heading)}
+                interactive={false}
+                zIndexOffset={-100}
+              />
             )}
 
             {livePositions.map((ship) => (
-              <Marker
+              <LiveVesselMarker
                 key={ship.id}
-                ref={getMarkerRefCallback(ship.id)}
-                position={ship.point}
-                icon={getShipIcon(ship.color, ship.heading)}
-                zIndexOffset={ship.id === selectedShipId ? 1000 : 0}
-                eventHandlers={{
-                  click: (e) => {
-                    L.DomEvent.stopPropagation(e.originalEvent);
-                    setSelectedShipId(ship.id);
-                    e.target.openPopup();
-                  },
-                }}
-              >
-                <Popup
-                  className="popup-dark vessel-detail-popup"
-                  closeButton
-                  autoPan
-                  autoClose
-                  closeOnClick
-                  eventHandlers={{
-                    remove: () => setSelectedShipId((id) => (id === ship.id ? null : id)),
-                  }}
-                >
-                  <div className="vessel-popup">
-                    <div className="vessel-popup-kicker">MARNET · LIVE WEATHER</div>
-                    <div className="vessel-popup-title">{ship.id}</div>
-                    <div className="vessel-popup-route">
-                      {PORT_BY_ID[ship.fromId].name} → <strong>{PORT_BY_ID[ship.toId].name}</strong>
-                    </div>
-                    <div className="vessel-popup-grid">
-                      <div><b>{ship.point[0].toFixed(3)}°</b><span>LAT</span></div>
-                      <div><b>{ship.point[1].toFixed(3)}°</b><span>LNG</span></div>
-                      <div><b>{ship.speed} kn</b><span>SPEED</span></div>
-                      <div><b>{Math.round(ship.heading)}°</b><span>HDG · {directionLabel(ship.heading)}</span></div>
-                    </div>
-                    {ship.id === selectedShipId && (
-                      <div className="vessel-popup-weather">
-                        <b>
-                          {environmentLoading ? 'Loading…' : weather ? weatherLabel(weather.current?.weather_code) : environmentError || '—'}
-                        </b>
-                        <span>
-                          {formatValue(weather?.current?.temperature_2m, 1, '°C')} · Wind{' '}
-                          {formatValue(weather?.current?.wind_speed_10m, 1, ' kn')}
-                        </span>
-                        <span>
-                          Waves {formatValue(marine?.current?.wave_height, 1, ' m')} · SST{' '}
-                          {formatValue(marine?.current?.sea_surface_temperature, 1, '°C')}
-                        </span>
-                      </div>
-                    )}
-                    <div className="vessel-popup-hint">Click map or X to clear gold route</div>
-                  </div>
-                </Popup>
-              </Marker>
+                ship={ship}
+                selected={ship.id === selectedShipId}
+                markerRef={getMarkerRefCallback(ship.id)}
+                onSelect={setSelectedShipId}
+                weather={ship.id === selectedShipId ? weather : null}
+                marine={ship.id === selectedShipId ? marine : null}
+                environmentLoading={ship.id === selectedShipId ? environmentLoading : false}
+                environmentError={ship.id === selectedShipId ? environmentError : ''}
+                formatValue={formatValue}
+                weatherLabel={weatherLabel}
+              />
             ))}
           </MapContainer>
 
@@ -1557,7 +1791,7 @@ export default function RouteRadarPage() {
               <Globe2 size={15} color="#22d3ee" />
               <div>
                 <div className="map-title">WORLD SEA ROUTES</div>
-                <div className="map-title-sub">MARNET · OPEN-METEO · REAL-TIME</div>
+                <div className="map-title-sub">AISSTREAM · MARNET · OPEN-METEO · REAL-TIME</div>
               </div>
             </div>
 

@@ -3,12 +3,19 @@
 // Problem Statement ID: SIH26006 | Ministry of Steel / SAIL
 
 require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
+
 const { connectDB } = require('./config/db');
 const { connectMySQL } = require('./config/mysql');
 const { notFound, errorHandler } = require('./middleware/errorHandler');
+
+const {
+  connectAISStream,
+  registerAISRoutes,
+} = require('./aisStream');
 
 // Route imports
 const authRoutes = require('./routes/authRoutes');
@@ -27,21 +34,20 @@ const realtimeRoutes = require('./routes/realtimeRoutes');
 
 const app = express();
 
-// Security and utility middleware
 app.use(helmet());
+
 app.use(cors({
   origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Connect Databases (with resilient fallbacks)
 connectDB();
 connectMySQL();
 
-// API Health Check
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'HEALTHY',
@@ -53,7 +59,7 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// API Routes Mounting
+// Existing API routes
 app.use('/api/auth', authRoutes);
 app.use('/api/ports', portRoutes);
 app.use('/api/vessels', vesselRoutes);
@@ -68,12 +74,19 @@ app.use('/api/reports', reportRoutes);
 app.use('/api/market', marketRoutes);
 app.use('/api/realtime', realtimeRoutes);
 
-// Error Handling
+// AISStream routes
+registerAISRoutes(app);
+
+// Error handling MUST stay after AIS routes
 app.use(notFound);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
+// Start AISStream
+connectAISStream();
+
+// Start server
 const server = app.listen(PORT, () => {
   console.log(`=======================================================`);
   console.log(` OCEANCHARTER AI BACKEND SERVER RUNNING ON PORT ${PORT}`);
